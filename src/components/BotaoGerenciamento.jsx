@@ -1,9 +1,9 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, Button } from "react-native";
 
 export default function BotaoGerenciamento(props){
     return(
-        <TouchableOpacity style={styles.botao}>
+        <TouchableOpacity style={styles.botao} onPress={props.abrir}>
             <Text style={styles.texto}>{props.texto}</Text>
         </TouchableOpacity>
     )
