@@ -12,11 +12,11 @@ export default function BotaoGerenciamento(props){
 const styles = StyleSheet.create({
     botao:{
         backgroundColor: '#12486A',
-        height: 40,
+        height: 50,
         padding: 8,
         alignItems: 'flex-start',
         justifyContent: 'center',
-        marginTop: 10
+        marginTop: 8
     },
     texto:{
         color: '#F5F8FA'
