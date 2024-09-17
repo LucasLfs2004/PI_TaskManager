@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import Header from '../../components/Header';
@@ -45,14 +46,30 @@ const Home = () => {
         <Header />
         <View style={styles.areaTextoPrincipal}>
           <Text style={styles.textoPrincipal}>{textoTituloModal}</Text>
-          <Button
-            title='Fechar'
+        </View>
+        <View style={styles.formularioTarefa}>
+          <Text>Reclamante</Text>
+          <TextInput placeholder='Usuario Reclamante'/>
+          <View style={styles.aberturaTipoChamado}>
+            <View>
+              <Text style={textoInfoChamado}>Data de abertura do chamado</Text>
+              <TextInput placeholder='17/09/2024'/>
+            </View>
+            <View>
+              <Text style={textoInfoChamado}>Tipo do chamado</Text>
+              <TextInput placeholder='Tarefa'/>
+            </View>
+          </View>
+          <Text style={textoInfoChamado}>Descrição</Text>
+          <TextInput placeholder='Descrição'/>
+        </View>
+        <Button
+            title='Concluir nova tarefa'
             onPress={() => {
               setModalCriaTarefaVisible(false);
               setTextoTituloModal('');
             }}
           />
-        </View>
       </Modal>
     </View>
   );
@@ -71,4 +88,13 @@ const styles = StyleSheet.create({
     color: '#3C3A9B',
     fontSize: 25,
   },
+  formularioTarefa: {
+
+  },
+  aberturaTipoChamado:{
+
+  },
+  textoInfoChamado:{
+    
+  }
 });
