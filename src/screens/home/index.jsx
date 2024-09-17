@@ -42,34 +42,43 @@ const Home = () => {
       />
       <BotaoChamado />
       <BotaoChamado />
-      <Modal visible={modalCriaTarefaVisible}>
+      <Modal visible={modalCriaTarefaVisible} animationType='slide'>
         <Header />
         <View style={styles.areaTextoPrincipal}>
           <Text style={styles.textoPrincipal}>{textoTituloModal}</Text>
         </View>
         <View style={styles.formularioTarefa}>
-          <Text>Reclamante</Text>
-          <TextInput placeholder='Usuario Reclamante'/>
-          <View style={styles.aberturaTipoChamado}>
+          <View style={styles.areaReclamante}>
+            <Text style={styles.textoInfoChamado}>Reclamante</Text>
+            <TextInput placeholder='Usuario Reclamante' style={styles.input} />
+          </View>
+          <View style={styles.areaTipoChamado}>
             <View>
-              <Text style={styles.textoInfoChamado}>Data de abertura do chamado</Text>
-              <TextInput placeholder='17/09/2024'/>
+              <Text style={styles.textoInfoChamado}>
+                Data de abertura do chamado
+              </Text>
+              <TextInput placeholder='17/09/2024' style={styles.input} />
             </View>
             <View>
               <Text style={styles.textoInfoChamado}>Tipo do chamado</Text>
-              <TextInput placeholder='Tarefa'/>
+              <TextInput
+                placeholder='Tarefa'
+                style={[styles.input, styles.tipoChamado]}
+              />
             </View>
           </View>
-          <Text style={styles.textoInfoChamado}>Descrição</Text>
-          <TextInput placeholder='Descrição'/>
+          <View style={styles.areaDescricao}>
+            <Text style={styles.textoInfoChamado}>Descrição</Text>
+            <TextInput placeholder='Descrição' style={styles.input} />
+          </View>
         </View>
         <Button
-            title='Concluir nova tarefa'
-            onPress={() => {
-              setModalCriaTarefaVisible(false);
-              setTextoTituloModal('');
-            }}
-          />
+          title='Concluir nova tarefa'
+          onPress={() => {
+            setModalCriaTarefaVisible(false);
+            setTextoTituloModal('');
+          }}
+        />
       </Modal>
     </View>
   );
@@ -89,12 +98,34 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   formularioTarefa: {
-
+    flex: 1,
   },
-  aberturaTipoChamado:{
-
+  areaReclamante: {
+    margin: 10,
   },
-  textoInfoChamado:{
-    
+  areaTipoChamado: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginRight: 10,
+    marginLeft: 10,
+  },
+  input: {
+    borderStyle: 'solid',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#000',
+    backgroundColor: '#DCE2E5',
+    padding: 8,
+  },
+  tipoChamado: {
+    width: 150,
+  },
+  textoInfoChamado: {
+    color: '#617480',
+    fontSize: 10,
+  },
+  areaDescricao: {
+    margin: 10
   }
 });
