@@ -52,15 +52,15 @@ const Home = () => {
           <TextInput placeholder='Usuario Reclamante'/>
           <View style={styles.aberturaTipoChamado}>
             <View>
-              <Text style={textoInfoChamado}>Data de abertura do chamado</Text>
+              <Text style={styles.textoInfoChamado}>Data de abertura do chamado</Text>
               <TextInput placeholder='17/09/2024'/>
             </View>
             <View>
-              <Text style={textoInfoChamado}>Tipo do chamado</Text>
+              <Text style={styles.textoInfoChamado}>Tipo do chamado</Text>
               <TextInput placeholder='Tarefa'/>
             </View>
           </View>
-          <Text style={textoInfoChamado}>Descrição</Text>
+          <Text style={styles.textoInfoChamado}>Descrição</Text>
           <TextInput placeholder='Descrição'/>
         </View>
         <Button
