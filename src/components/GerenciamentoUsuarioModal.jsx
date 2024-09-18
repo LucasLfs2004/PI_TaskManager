@@ -11,18 +11,18 @@ export default function GerenciamentoChamadoModal(props){
         </View>
         <View style={styles.formularioTarefa}>
           <View style={styles.areaReclamante}>
-            <Text style={styles.textoInfoChamado}>Reclamante</Text>
+            <Text style={styles.textoInfoUsuario}>Reclamante</Text>
             <TextInput placeholder='Nome do Usuário' style={styles.input} />
           </View>
-          <View style={styles.areaTipoChamado}>
-            <View>
-              <Text style={styles.textoInfoChamado}>
+          <View style={styles.areaTipoUsuario}>
+            <View >
+              <Text style={styles.textoInfoUsuario}>
                 N° do CPF
               </Text>
-              <TextInput placeholder='' style={styles.input} />
+              <TextInput placeholder='' style={[styles.input, styles.inputCPF]} />
             </View>
             <View>
-              <Text style={styles.textoInfoChamado}>Tipo do Usuário</Text>
+              <Text style={styles.textoInfoUsuario}>Tipo do Usuário</Text>
               <TextInput
                 placeholder=''
                 style={[styles.input, styles.tipoChamado]}
@@ -30,11 +30,11 @@ export default function GerenciamentoChamadoModal(props){
             </View>
           </View>
           <View style={styles.areaEmail}>
-            <Text style={styles.textoInfoChamado}>E-mail do usuário</Text>
+            <Text style={styles.textoInfoUsuario}>E-mail do usuário</Text>
             <TextInput placeholder='' style={styles.input} />
           </View>
           <View style={styles.areaSenha}>
-            <Text style={styles.textoInfoChamado}>Senha</Text>
+            <Text style={styles.textoInfoUsuario}>Senha</Text>
             <TextInput placeholder='' style={styles.input} />
           </View>
         </View>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     areaReclamante: {
       margin: 10,
     },
-    areaTipoChamado: {
+    areaTipoUsuario: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -78,10 +78,13 @@ const styles = StyleSheet.create({
       backgroundColor: '#DCE2E5',
       padding: 8,
     },
+    inputCPF:{
+      width: 190
+    },
     tipoChamado: {
       width: 150,
     },
-    textoInfoChamado: {
+    textoInfoUsuario: {
       color: '#617480',
       fontSize: 10,
     },
