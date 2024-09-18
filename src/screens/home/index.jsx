@@ -12,9 +12,11 @@ import BotaoGerenciamento from '../../components/BotaoGerenciamento';
 import BotaoChamado from '../../components/BotaoChamado';
 import { useState } from 'react';
 import GerenciamentoChamadoModal from '../../components/GerenciamentoChamadoModal';
+import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
 
 const Home = () => {
   const [modalCriaTarefaVisible, setModalCriaTarefaVisible] = useState(false);
+  const [modalGerenciamentoUsuarioVisible, setModalGerenciamentoUsuarioVisible] = useState(false);
   const [textoTituloModal, setTextoTituloModal] = useState('');
 
   return (
@@ -41,12 +43,25 @@ const Home = () => {
           setTextoTituloModal('Gerenciar tarefa');
         }}
       />
+      <BotaoGerenciamento
+        texto='Gerenciar Usuario'
+        abrir={() => {
+          setModalGerenciamentoUsuarioVisible(true);
+          setTextoTituloModal('Gerenciar Usuario');
+        }}
+      />
       <BotaoChamado />
       <BotaoChamado />
       <GerenciamentoChamadoModal
         visivel={modalCriaTarefaVisible}
         titulo={textoTituloModal}
         setVisivel={setModalCriaTarefaVisible}
+        setTexto={setTextoTituloModal}
+      />
+      <GerenciamentoUsuarioModal
+        visivel={modalGerenciamentoUsuarioVisible}
+        titulo={textoTituloModal}
+        setVisivel={setModalGerenciamentoUsuarioVisible}
         setTexto={setTextoTituloModal}
       />
     </View>
