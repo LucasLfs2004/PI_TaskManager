@@ -11,13 +11,14 @@ import Header from '../../components/Header';
 import BotaoGerenciamento from '../../components/BotaoGerenciamento';
 import BotaoChamado from '../../components/BotaoChamado';
 import { useState } from 'react';
+import GerenciamentoChamadoModal from '../../components/GerenciamentoChamadoModal';
 
 const Home = () => {
   const [modalCriaTarefaVisible, setModalCriaTarefaVisible] = useState(false);
   const [textoTituloModal, setTextoTituloModal] = useState('');
 
   return (
-    <View>
+    <View style={styles.container}>
       <Header />
       <BotaoGerenciamento
         texto='Criar novas tarefas'
@@ -42,44 +43,7 @@ const Home = () => {
       />
       <BotaoChamado />
       <BotaoChamado />
-      <Modal visible={modalCriaTarefaVisible} animationType='slide'>
-        <Header />
-        <View style={styles.areaTextoPrincipal}>
-          <Text style={styles.textoPrincipal}>{textoTituloModal}</Text>
-        </View>
-        <View style={styles.formularioTarefa}>
-          <View style={styles.areaReclamante}>
-            <Text style={styles.textoInfoChamado}>Reclamante</Text>
-            <TextInput placeholder='Usuario Reclamante' style={styles.input} />
-          </View>
-          <View style={styles.areaTipoChamado}>
-            <View>
-              <Text style={styles.textoInfoChamado}>
-                Data de abertura do chamado
-              </Text>
-              <TextInput placeholder='17/09/2024' style={styles.input} />
-            </View>
-            <View>
-              <Text style={styles.textoInfoChamado}>Tipo do chamado</Text>
-              <TextInput
-                placeholder='Tarefa'
-                style={[styles.input, styles.tipoChamado]}
-              />
-            </View>
-          </View>
-          <View style={styles.areaDescricao}>
-            <Text style={styles.textoInfoChamado}>Descrição</Text>
-            <TextInput placeholder='Descrição' style={styles.input} />
-          </View>
-        </View>
-        <Button
-          title='Concluir nova tarefa'
-          onPress={() => {
-            setModalCriaTarefaVisible(false);
-            setTextoTituloModal('');
-          }}
-        />
-      </Modal>
+      <GerenciamentoChamadoModal visivel={modalCriaTarefaVisible} titulo={textoTituloModal} setVisivel={setModalCriaTarefaVisible} setTexto={setTextoTituloModal}/>
     </View>
   );
 };
