@@ -73,5 +73,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5F8FA',
+    marginTop: 25
   },
 });
