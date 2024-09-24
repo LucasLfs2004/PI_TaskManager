@@ -9,15 +9,21 @@ import {
   Button,
 } from 'react-native';
 import Header from './Header';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function RelatorioDeTarefaModal(props) {
   return (
     <Modal visible={props.visivel} animationType='slide'>
       <Header />
       <View style={styles.container}>
-        <View style={styles.areaTextoPrincipal}>
-          <Text style={styles.textoPrincipal}>{props.titulo}</Text>
-        </View>
+      <LinearGradient
+        style={styles.areaTextoPrincipal}
+        colors={['#8D9CD3', '#FFF']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.45, y: 0 }}
+      >
+        <Text style={styles.textoPrincipal}>{props.titulo}</Text>
+      </LinearGradient>
         <View style={styles.areaPeriodo}>
           <Text style={styles.tituloPesquisa}>Período da pesquisa</Text>
           <View style={styles.areaDatas}>
@@ -62,7 +68,11 @@ const styles = StyleSheet.create({
     
   },
   areaTextoPrincipal: {
-    backgroundColor: '#8D9CD3',
+    marginTop: 20,
+    marginBottom: 20,
+    height: 80,
+    justifyContent: 'center',
+    paddingLeft: 20
   },
   textoPrincipal: {
     color: '#3C3A9B',

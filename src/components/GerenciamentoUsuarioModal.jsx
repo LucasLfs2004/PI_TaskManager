@@ -1,14 +1,20 @@
 import React from "react";
 import { StyleSheet, Modal, View, Text, TextInput, Button } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 import Header from "./Header";
 
 export default function GerenciamentoChamadoModal(props){
     return(
         <Modal visible={props.visivel} animationType='slide'>
         <Header />
-        <View style={styles.areaTextoPrincipal}>
-          <Text style={styles.textoPrincipal}>{props.titulo}</Text>
-        </View>
+        <LinearGradient
+        style={styles.areaTextoPrincipal}
+        colors={['#8D9CD3', '#FFF']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.45, y: 0 }}
+      >
+        <Text style={styles.textoPrincipal}>{props.titulo}</Text>
+      </LinearGradient>
         <View style={styles.formularioTarefa}>
           <View style={styles.areaReclamante}>
             <Text style={styles.textoInfoUsuario}>Reclamante</Text>
@@ -51,8 +57,12 @@ export default function GerenciamentoChamadoModal(props){
 
 const styles = StyleSheet.create({
     areaTextoPrincipal: {
-      backgroundColor: '#8D9CD3',
-    },
+    marginTop: 20,
+    marginBottom: 20,
+    height: 80,
+    justifyContent: 'center',
+    paddingLeft: 20
+  },
     textoPrincipal: {
       color: '#3C3A9B',
       fontSize: 25,
