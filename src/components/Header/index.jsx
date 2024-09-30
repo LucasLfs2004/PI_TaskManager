@@ -8,14 +8,14 @@ export default function Header() {
     <View style={styles.container}>
       <View style={styles.areaBanner}>
         <Image
-          source={require('../../assets/banner.png')}
+          source={require('../../../assets/banner.png')}
           style={styles.banner}
         />
       </View>
       <Text style={styles.nomeUsuario}>{nomeUsuario}</Text>
       <View style={styles.areaIcone}>
         <Image 
-        source={require('../../assets/userIcon.png')} 
+        source={require('../../../assets/userIcon.png')} 
           style={styles.iconeUsuario}
         />
       </View>

@@ -13,10 +13,15 @@ import BotaoChamado from '../../components/BotaoChamado';
 import { useState } from 'react';
 import GerenciamentoChamadoModal from '../../components/GerenciamentoChamadoModal';
 import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
+import RelatorioDeTarefaModal from '../../components/RelatorioDeTarefaModal';
 
 const Home = () => {
   const [modalCriaTarefaVisible, setModalCriaTarefaVisible] = useState(false);
-  const [modalGerenciamentoUsuarioVisible, setModalGerenciamentoUsuarioVisible] = useState(false);
+  const [
+    modalGerenciamentoUsuarioVisible,
+    setModalGerenciamentoUsuarioVisible,
+  ] = useState(false);
+  const [modalRelatorio, setModalRelatorio] = useState(false);
   const [textoTituloModal, setTextoTituloModal] = useState('');
 
   return (
@@ -50,6 +55,13 @@ const Home = () => {
           setTextoTituloModal('Gerenciar Usuario');
         }}
       />
+      <BotaoGerenciamento
+        texto='Criar e visualizar relatórios'
+        abrir={() => {
+          setModalRelatorio(true);
+          setTextoTituloModal('Relatório de Tarefas');
+        }}
+      />
       <BotaoChamado />
       <BotaoChamado />
       <GerenciamentoChamadoModal
@@ -64,6 +76,13 @@ const Home = () => {
         setVisivel={setModalGerenciamentoUsuarioVisible}
         setTexto={setTextoTituloModal}
       />
+
+      <RelatorioDeTarefaModal
+        visivel={modalRelatorio}
+        titulo={textoTituloModal}
+        setVisivel={setModalRelatorio}
+        setTexto={setTextoTituloModal}
+      />
     </View>
   );
 };
@@ -73,6 +92,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5F8FA',
-    marginTop: 25
+    marginTop: 25,
   },
 });
