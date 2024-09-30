@@ -2,10 +2,16 @@ import React from 'react';
 import { StyleSheet, Modal, View, Text, TextInput, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../Header';
+import { ModalStyles } from '../CommonStyles/Modal';
+import BotaoSubmit from '../BotaoSubmit';
 
 export default function GerenciamentoChamadoModal(props) {
   return (
-    <Modal visible={props.visivel} animationType='slide'>
+    <Modal
+      visible={props.visivel}
+      style={ModalStyles.container}
+      animationType='slide'
+    >
       <Header />
       <LinearGradient
         style={styles.areaTextoPrincipal}
@@ -18,33 +24,36 @@ export default function GerenciamentoChamadoModal(props) {
       <View style={styles.formularioTarefa}>
         <View style={styles.areaReclamante}>
           <Text style={styles.textoInfoUsuario}>Reclamante</Text>
-          <TextInput placeholder='Nome do Usuário' style={styles.input} />
+          <TextInput placeholder='Nome do Usuário' style={ModalStyles.input} />
         </View>
         <View style={styles.areaTipoUsuario}>
           <View>
             <Text style={styles.textoInfoUsuario}>N° do CPF</Text>
-            <TextInput placeholder='' style={[styles.input, styles.inputCPF]} />
+            <TextInput
+              placeholder=''
+              style={[ModalStyles.input, ModalStyles.inputCPF]}
+            />
           </View>
           <View>
             <Text style={styles.textoInfoUsuario}>Tipo do Usuário</Text>
             <TextInput
               placeholder=''
-              style={[styles.input, styles.tipoUsuario]}
+              style={[ModalStyles.input, styles.tipoUsuario]}
             />
           </View>
         </View>
         <View style={styles.areaEmail}>
           <Text style={styles.textoInfoUsuario}>E-mail do usuário</Text>
-          <TextInput placeholder='' style={styles.input} />
+          <TextInput placeholder='' style={ModalStyles.input} />
         </View>
         <View style={styles.areaSenha}>
           <Text style={styles.textoInfoUsuario}>Senha</Text>
-          <TextInput placeholder='' style={styles.input} />
+          <TextInput placeholder='' style={ModalStyles.input} />
         </View>
       </View>
-      <Button
-        title='Concluir nova tarefa'
-        onPress={() => {
+      <BotaoSubmit
+        text={'Concluir nova tarefa'}
+        action={() => {
           props.setVisivel(false);
           props.setTexto('');
         }}
@@ -66,7 +75,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   formularioTarefa: {
-    flex: 1,
+    // flex: 1,
   },
   areaReclamante: {
     margin: 10,

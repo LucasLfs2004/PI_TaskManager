@@ -10,10 +10,17 @@ import {
 } from 'react-native';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ModalStyles } from '../CommonStyles/Modal';
+import BotaoSubmit from '../BotaoSubmit';
+import { scale } from '../../functions/scale';
 
 export default function RelatorioDeTarefaModal(props) {
   return (
-    <Modal visible={props.visivel} animationType='slide'>
+    <Modal
+      visible={props.visivel}
+      style={ModalStyles.container}
+      animationType='slide'
+    >
       <Header />
       <View style={styles.container}>
         <LinearGradient
@@ -27,36 +34,34 @@ export default function RelatorioDeTarefaModal(props) {
         <View style={styles.areaPeriodo}>
           <Text style={styles.tituloPesquisa}>Período da pesquisa</Text>
           <View style={styles.areaDatas}>
-            <View>
+            <View style={ModalStyles.inputArea}>
               <Text>Data inicial</Text>
-              <TextInput placeholder='00/00/0000' style={styles.input} />
+              <TextInput placeholder='00/00/0000' style={ModalStyles.input} />
             </View>
-            <View>
+            <View style={ModalStyles.inputArea}>
               <Text>Data Final</Text>
-              <TextInput placeholder='00/00/0000' style={styles.input} />
+              <TextInput placeholder='00/00/0000' style={ModalStyles.input} />
             </View>
           </View>
         </View>
         <View style={styles.areaRelatorio}>
           <View style={styles.areaCabecalhoRelatorio}>
             <Text style={styles.tituloRelatorio}>
-              Quais tarefas deseja consultar ?
+              Quais tarefas deseja consultar?
             </Text>
-            <TextInput style={[styles.input, styles.inputTarefa]} />
+            <TextInput style={[ModalStyles.input, styles.inputTarefa]} />
           </View>
           <TouchableOpacity style={styles.botaoGerarRelatorio}>
-            <Text>Gerar relatório</Text>
+            <Text style={styles.textGerarRelatorio}>Gerar relatório</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.botaoVoltar}
-          onPress={() => {
+        <BotaoSubmit
+          text={'Voltar ao menu'}
+          action={() => {
             props.setVisivel(false);
             props.setTexto('');
           }}
-        >
-          <Text>Voltar ao menu inicial</Text>
-        </TouchableOpacity>
+        />
       </View>
     </Modal>
   );
@@ -65,6 +70,7 @@ export default function RelatorioDeTarefaModal(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // marginHorizontal: scale(16),
   },
   areaTextoPrincipal: {
     marginTop: 20,
@@ -78,8 +84,9 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   areaPeriodo: {
-    marginLeft: 40,
-    marginTop: 20,
+    marginHorizontal: scale(10),
+    marginTop: scale(12),
+    marginVertical: scale(8),
   },
   tituloPesquisa: {
     marginBottom: 10,
@@ -87,7 +94,7 @@ const styles = StyleSheet.create({
   areaDatas: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginRight: 40,
+    marginRight: scale(22),
     marginBottom: 20,
   },
   input: {
@@ -102,11 +109,12 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   areaRelatorio: {
-    marginLeft: 20,
+    marginHorizontal: scale(10),
     marginRight: 20,
     marginTop: 30,
     borderWidth: 1,
     borderColor: '#DCE2E5',
+    backgroundColor: '#F5F8FA',
     borderRadius: 8,
     height: 200,
   },
@@ -114,21 +122,21 @@ const styles = StyleSheet.create({
     marginTop: -40,
     paddingLeft: 20,
   },
-  tituloRelatorio: {},
+  tituloRelatorio: {
+    marginBottom: scale(8),
+  },
   botaoGerarRelatorio: {
+    marginHorizontal: scale(20),
+    borderRadius: scale(10),
     marginTop: 10,
     backgroundColor: '#51B853',
     alignItems: 'center',
     justifyContent: 'center',
     height: 30,
   },
-  botaoVoltar: {
-    marginTop: 10,
-    backgroundColor: '#51B853',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 30,
-    marginRight: 20,
-    marginLeft: 20,
+  textGerarRelatorio: {
+    color: '#fff',
+    fontSize: scale(18),
+    fontWeight: '500',
   },
 });

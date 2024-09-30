@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, Button } from 'react-native';
+import { scale } from '../../functions/scale';
 
 export default function BotaoGerenciamento(props) {
   return (
@@ -19,6 +20,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   texto: {
+    fontSize: scale(16),
+    fontWeight: '500',
     color: '#F5F8FA',
   },
 });
