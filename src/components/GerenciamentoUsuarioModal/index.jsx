@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Modal, View, Text, TextInput, Button } from 'react-native';
-import Header from './Header';
 import { LinearGradient } from 'expo-linear-gradient';
+import Header from '../Header';
 
 export default function GerenciamentoChamadoModal(props) {
   return (
@@ -17,27 +17,29 @@ export default function GerenciamentoChamadoModal(props) {
       </LinearGradient>
       <View style={styles.formularioTarefa}>
         <View style={styles.areaReclamante}>
-          <Text style={styles.textoInfoChamado}>Reclamante</Text>
-          <TextInput placeholder='Usuario Reclamante' style={styles.input} />
+          <Text style={styles.textoInfoUsuario}>Reclamante</Text>
+          <TextInput placeholder='Nome do Usuário' style={styles.input} />
         </View>
-        <View style={styles.areaTipoChamado}>
+        <View style={styles.areaTipoUsuario}>
           <View>
-            <Text style={styles.textoInfoChamado}>
-              Data de abertura do chamado
-            </Text>
-            <TextInput placeholder='17/09/2024' style={styles.input} />
+            <Text style={styles.textoInfoUsuario}>N° do CPF</Text>
+            <TextInput placeholder='' style={[styles.input, styles.inputCPF]} />
           </View>
           <View>
-            <Text style={styles.textoInfoChamado}>Tipo do chamado</Text>
+            <Text style={styles.textoInfoUsuario}>Tipo do Usuário</Text>
             <TextInput
-              placeholder='Tarefa'
-              style={[styles.input, styles.tipoChamado]}
+              placeholder=''
+              style={[styles.input, styles.tipoUsuario]}
             />
           </View>
         </View>
-        <View style={styles.areaDescricao}>
-          <Text style={styles.textoInfoChamado}>Descrição</Text>
-          <TextInput placeholder='Descrição' style={styles.input} />
+        <View style={styles.areaEmail}>
+          <Text style={styles.textoInfoUsuario}>E-mail do usuário</Text>
+          <TextInput placeholder='' style={styles.input} />
+        </View>
+        <View style={styles.areaSenha}>
+          <Text style={styles.textoInfoUsuario}>Senha</Text>
+          <TextInput placeholder='' style={styles.input} />
         </View>
       </View>
       <Button
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     height: 80,
     justifyContent: 'center',
-    paddingLeft: 20
+    paddingLeft: 20,
   },
   textoPrincipal: {
     color: '#3C3A9B',
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
   areaReclamante: {
     margin: 10,
   },
-  areaTipoChamado: {
+  areaTipoUsuario: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -84,14 +86,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#DCE2E5',
     padding: 8,
   },
-  tipoChamado: {
+  inputCPF: {
+    width: 190,
+  },
+  tipoUsuario: {
     width: 150,
   },
-  textoInfoChamado: {
+  textoInfoUsuario: {
     color: '#617480',
     fontSize: 10,
   },
-  areaDescricao: {
+  areaEmail: {
+    margin: 10,
+  },
+  areaSenha: {
     margin: 10,
   },
 });

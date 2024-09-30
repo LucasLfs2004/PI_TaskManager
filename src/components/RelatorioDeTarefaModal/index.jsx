@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Button,
 } from 'react-native';
-import Header from './Header';
+import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function RelatorioDeTarefaModal(props) {
@@ -16,14 +16,14 @@ export default function RelatorioDeTarefaModal(props) {
     <Modal visible={props.visivel} animationType='slide'>
       <Header />
       <View style={styles.container}>
-      <LinearGradient
-        style={styles.areaTextoPrincipal}
-        colors={['#8D9CD3', '#FFF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0.45, y: 0 }}
-      >
-        <Text style={styles.textoPrincipal}>{props.titulo}</Text>
-      </LinearGradient>
+        <LinearGradient
+          style={styles.areaTextoPrincipal}
+          colors={['#8D9CD3', '#FFF']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0.45, y: 0 }}
+        >
+          <Text style={styles.textoPrincipal}>{props.titulo}</Text>
+        </LinearGradient>
         <View style={styles.areaPeriodo}>
           <Text style={styles.tituloPesquisa}>Período da pesquisa</Text>
           <View style={styles.areaDatas}>
@@ -65,14 +65,13 @@ export default function RelatorioDeTarefaModal(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
   },
   areaTextoPrincipal: {
     marginTop: 20,
     marginBottom: 20,
     height: 80,
     justifyContent: 'center',
-    paddingLeft: 20
+    paddingLeft: 20,
   },
   textoPrincipal: {
     color: '#3C3A9B',
@@ -123,13 +122,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 30,
   },
-  botaoVoltar:{
+  botaoVoltar: {
     marginTop: 10,
     backgroundColor: '#51B853',
     alignItems: 'center',
     justifyContent: 'center',
     height: 30,
     marginRight: 20,
-    marginLeft: 20
-  }
+    marginLeft: 20,
+  },
 });

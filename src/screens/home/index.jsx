@@ -21,7 +21,7 @@ const Home = () => {
     modalGerenciamentoUsuarioVisible,
     setModalGerenciamentoUsuarioVisible,
   ] = useState(false);
-  const [modalRelatorio, setModalRelatorio] = useState(false)
+  const [modalRelatorio, setModalRelatorio] = useState(false);
   const [textoTituloModal, setTextoTituloModal] = useState('');
 
   return (
@@ -77,12 +77,12 @@ const Home = () => {
         setTexto={setTextoTituloModal}
       />
 
-      <RelatorioDeTarefaModal 
-        visivel={modalRelatorio} 
-        titulo={textoTituloModal} 
+      <RelatorioDeTarefaModal
+        visivel={modalRelatorio}
+        titulo={textoTituloModal}
         setVisivel={setModalRelatorio}
         setTexto={setTextoTituloModal}
-        />
+      />
     </View>
   );
 };
