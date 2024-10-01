@@ -31,7 +31,7 @@ export default function GerenciamentoChamadoModal(props) {
             <Text style={styles.textoInfoUsuario}>N° do CPF</Text>
             <TextInput
               placeholder=''
-              style={[ModalStyles.input, ModalStyles.inputCPF]}
+              style={[ModalStyles.input, ModalStyles.inputCPF, styles.inputCPF]}
             />
           </View>
           <View>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   inputCPF: {
-    width: 190,
+    width: 180,
   },
   tipoUsuario: {
     width: 150,
