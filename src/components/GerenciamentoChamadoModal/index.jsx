@@ -39,7 +39,7 @@ export default function GerenciamentoChamadoModal(props) {
     if(chamado.tipo !== null && chamado.reclamante !== null && chamado.aberturaData !== null && chamado.tipo !== null && chamado.descricao !==null){
       console.log(chamado)
       //todo adc chamado a um doc no firebase
-      props.setVisible(false);
+      props.setVisivel(false);
       props.setTexto('');
       setAvisoErroVisivel(false);
       setAvisoErroMensagem("");
@@ -52,10 +52,14 @@ export default function GerenciamentoChamadoModal(props) {
       setAvisoErroVisivel(true);
       setAvisoErroMensagem("Todos os campos devem ser preenchidos");
     }
-
-
-    
   }
+
+  function sair(){
+    props.setVisivel(false);
+    props.setTexto('');
+    setAvisoErroVisivel(false);
+  }
+
 
   return (
     <Modal
@@ -112,6 +116,12 @@ export default function GerenciamentoChamadoModal(props) {
         text='Criar nova tarefa'
         action={() => {
           salvarChamado()
+        }}
+      />
+      <BotaoSubmit
+        text={'Sair'}
+        action={() => {
+          sair()
         }}
       />
       <View style={styles.aviso}>

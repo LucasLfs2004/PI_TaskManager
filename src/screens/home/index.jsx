@@ -45,7 +45,8 @@ const Home = props => {
         <BotaoGerenciamento
           texto='Atribuir tarefas a usuário'
           abrir={() => {
-            setModalCriaTarefaVisible(true);
+            navigation.navigate('Tasks');
+            // setModalCriaTarefaVisible(true);
             setTextoTituloModal('Atribuir tarefa');
           }}
         />
@@ -82,7 +83,7 @@ const Home = props => {
       <GerenciamentoChamadoModal
         visivel={modalCriaTarefaVisible}
         titulo={textoTituloModal}
-        setVisible={value => setModalCriaTarefaVisible(value)}
+        setVisivel={setModalCriaTarefaVisible}
         setTexto={setTextoTituloModal}
       />
       <GerenciamentoUsuarioModal

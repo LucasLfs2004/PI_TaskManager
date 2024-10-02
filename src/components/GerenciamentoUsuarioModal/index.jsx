@@ -12,6 +12,7 @@ export default function GerenciamentoUsuarioModal(props) {
   const [tipoUsuario, setTipoUsuario] = useState(null);
   const [emailUsuario, setEmailUsuario] = useState(null);
   const [senha, setSenha] = useState(null);
+
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
   const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
 
@@ -42,6 +43,12 @@ export default function GerenciamentoUsuarioModal(props) {
       setAvisoErroVisivel(true);
       setAvisoErroMensagem('Todos os campos devem ser preenchidos');
     }
+  }
+
+  function sair(){
+    props.setVisivel(false);
+    props.setTexto('');
+    setAvisoErroVisivel(false);
   }
 
   return (
@@ -108,6 +115,12 @@ export default function GerenciamentoUsuarioModal(props) {
         text={'Concluir nova tarefa'}
         action={() => {
           salvarUsuario();
+        }}
+      />
+      <BotaoSubmit
+        text={'Sair'}
+        action={() => {
+          sair()
         }}
       />
     </Modal>
