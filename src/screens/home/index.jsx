@@ -19,6 +19,7 @@ import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModa
 import RelatorioDeTarefaModal from '../../components/RelatorioDeTarefaModal';
 import { falseList } from '../../../assets/falseDb';
 import { useNavigation } from '@react-navigation/native';
+import AvisoDeErro from '../../components/AvisoDeErro';
 
 const Home = props => {
   const navigation = useNavigation();

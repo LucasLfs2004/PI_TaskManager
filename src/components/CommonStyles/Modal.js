@@ -5,8 +5,7 @@ import { scale } from "../../functions/scale";
 export const ModalStyles = StyleSheet.create({
     container: {
         flex: 1,
-        
-        paddingTop: scale(80) ,
+        paddingTop: scale(80),
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',

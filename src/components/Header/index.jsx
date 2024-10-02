@@ -9,7 +9,7 @@ export default function Header({ removePaddingTop }) {
     <View
       style={[
         styles.container,
-        removePaddingTop && { paddingTop: 0, height: 100 },
+        { paddingTop: 0, height: 100 },
       ]}
     >
       <View style={styles.areaBanner}>

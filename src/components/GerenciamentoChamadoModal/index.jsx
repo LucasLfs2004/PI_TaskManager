@@ -7,15 +7,56 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  Image,
+  Image
 } from 'react-native';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ModalStyles } from '../CommonStyles/Modal';
 import BotaoSubmit from '../BotaoSubmit';
 import { scale } from '../../functions/scale';
+import AvisoDeErro from '../AvisoDeErro';
+import { useState } from 'react';
 
 export default function GerenciamentoChamadoModal(props) {
+  const [tituloChamado, setTituloChamado] = useState(null);
+  const [reclamanteChamado, setReclamanteChamado] = useState(null);
+  const [aberturaData, setAberturaData] = useState(null);
+  const [tipoChamado, setTipoChamado] = useState(null);
+  const [descricaoChamado, setDescricaoChamado] = useState(null);
+
+  const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
+  const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
+
+  function salvarChamado(){
+    let chamado = {
+      titulo: tituloChamado,
+      reclamante: reclamanteChamado,
+      aberturaData: aberturaData,
+      tipo: tipoChamado,
+      descricao: descricaoChamado
+    }
+
+    if(chamado.tipo !== null && chamado.reclamante !== null && chamado.aberturaData !== null && chamado.tipo !== null && chamado.descricao !==null){
+      console.log(chamado)
+      //todo adc chamado a um doc no firebase
+      props.setVisible(false);
+      props.setTexto('');
+      setAvisoErroVisivel(false);
+      setAvisoErroMensagem("");
+      setTituloChamado(null);
+      setReclamanteChamado(null);
+      setAberturaData(null);
+      setTipoChamado(null);
+      setDescricaoChamado(null);
+    }else {
+      setAvisoErroVisivel(true);
+      setAvisoErroMensagem("Todos os campos devem ser preenchidos");
+    }
+
+
+    
+  }
+
   return (
     <Modal
       visible={props.visivel}
@@ -23,6 +64,7 @@ export default function GerenciamentoChamadoModal(props) {
       animationType='slide'
     >
       <Header />
+      <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem}/>
       <LinearGradient
         style={styles.areaTextoPrincipal}
         colors={['#8D9CD3', '#FFF']}
@@ -34,12 +76,13 @@ export default function GerenciamentoChamadoModal(props) {
       <View style={styles.formularioTarefa}>
         <View style={[styles.areaReclamante, ModalStyles.inputArea]}>
           <Text style={styles.textoInfoChamado}>Título</Text>
-          <TextInput placeholder='Título da tarefa' style={ModalStyles.input} />
+          <TextInput placeholder='Título da tarefa' onChangeText={setTituloChamado} style={ModalStyles.input} />
         </View>
         <View style={[styles.areaReclamante, ModalStyles.inputArea]}>
           <Text style={styles.textoInfoChamado}>Reclamante</Text>
           <TextInput
             placeholder='Usuario Reclamante'
+            onChangeText={setReclamanteChamado}
             style={ModalStyles.input}
           />
         </View>
@@ -48,27 +91,27 @@ export default function GerenciamentoChamadoModal(props) {
             <Text style={styles.textoInfoChamado}>
               Data de abertura do chamado
             </Text>
-            <TextInput placeholder='17/09/2024' style={ModalStyles.input} />
+            <TextInput placeholder='17/09/2024' onChangeText={setAberturaData} style={ModalStyles.input} />
           </View>
           <View style={ModalStyles.inputArea}>
             <Text style={styles.textoInfoChamado}>Tipo do chamado</Text>
             <TextInput
               placeholder='Tarefa'
+              onChangeText={setTipoChamado}
               style={[ModalStyles.input, styles.tipoChamado]}
             />
           </View>
         </View>
         <View style={[styles.areaDescricao, ModalStyles.inputArea]}>
           <Text style={styles.textoInfoChamado}>Descrição</Text>
-          <TextInput placeholder='Descrição' style={ModalStyles.input} />
+          <TextInput placeholder='Descrição' onChangeText={setDescricaoChamado} style={ModalStyles.input} />
         </View>
       </View>
 
       <BotaoSubmit
         text='Criar nova tarefa'
         action={() => {
-          props.setVisible(false);
-          props.setTexto('');
+          salvarChamado()
         }}
       />
       <View style={styles.aviso}>

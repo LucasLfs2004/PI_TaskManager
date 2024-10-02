@@ -16,6 +16,6 @@ firestore().settings({
     persistence: true, w
   });
 
-const app = initializeApp(firebaseConfig);
+const db = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
-export { app, firestore };
+export { db, firestore };
