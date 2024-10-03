@@ -5,8 +5,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
-  TouchableOpacity,
   Image
 } from 'react-native';
 import Header from '../Header';

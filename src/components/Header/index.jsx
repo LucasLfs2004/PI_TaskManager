@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, Text, View, StyleSheet, StatusBar } from 'react-native';
+import { Image, Text, View, StyleSheet } from 'react-native';
 import { scale } from '../../functions/scale';
 
 export default function Header({ removePaddingTop }) {
