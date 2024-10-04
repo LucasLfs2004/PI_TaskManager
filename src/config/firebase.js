@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import firestore from '@react-native-firebase/firestore';
+import { getFirestore } from "firebase/firestore";
 //import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -12,10 +12,9 @@ const firebaseConfig = {
   appId: "1:33193642030:web:c66ffbe9d5eec7072077bf",
   measurementId: "G-M2W30YEHDV"
 };
-firestore().settings({
-    persistence: true, w
-  });
 
-const db = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
-export { db, firestore };
+const db = getFirestore(app);
+
+export { db };

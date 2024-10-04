@@ -6,7 +6,7 @@ import moment from 'moment';
 const checkIfLate = dateString => {
   const inputDate = moment(dateString, 'DD/MM/YYYY');
 
-  console.log(dateString);
+  // console.log(dateString);
   // Obter a data atual
   const currentDate = moment();
 
@@ -19,7 +19,7 @@ const checkIfLate = dateString => {
 };
 const TaskCard = ({ task }) => {
   const [delayed, setDelayed] = useState(checkIfLate(task.expire_at));
-  console.log(delayed, task.expire_at);
+  // console.log(delayed, task.expire_at);
 
   return (
     <View style={styles.card}>

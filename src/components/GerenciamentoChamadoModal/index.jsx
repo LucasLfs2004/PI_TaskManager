@@ -14,6 +14,8 @@ import BotaoSubmit from '../BotaoSubmit';
 import { scale } from '../../functions/scale';
 import AvisoDeErro from '../AvisoDeErro';
 import { useState } from 'react';
+import { db } from '../../config/firebase';
+import {collection, addDoc } from 'firebase/firestore';
 
 export default function GerenciamentoChamadoModal(props) {
   const [tituloChamado, setTituloChamado] = useState(null);
@@ -25,7 +27,7 @@ export default function GerenciamentoChamadoModal(props) {
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
   const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
 
-  function salvarChamado(){
+  async function salvarChamado(){
     let chamado = {
       titulo: tituloChamado,
       reclamante: reclamanteChamado,
@@ -36,7 +38,8 @@ export default function GerenciamentoChamadoModal(props) {
 
     if(chamado.tipo !== null && chamado.reclamante !== null && chamado.aberturaData !== null && chamado.tipo !== null && chamado.descricao !==null){
       console.log(chamado)
-      //todo adc chamado a um doc no firebase
+      // await addDoc(collection(db, "tarefa"), {chamado})
+
       props.setVisivel(false);
       props.setTexto('');
       setAvisoErroVisivel(false);

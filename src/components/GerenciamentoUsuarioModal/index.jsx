@@ -5,6 +5,8 @@ import Header from '../Header';
 import { ModalStyles } from '../CommonStyles/Modal';
 import BotaoSubmit from '../BotaoSubmit';
 import AvisoDeErro from '../AvisoDeErro';
+import { db } from '../../config/firebase';
+import {collection, addDoc } from 'firebase/firestore';
 
 export default function GerenciamentoUsuarioModal(props) {
   const [nome, setNome] = useState(null);
@@ -16,7 +18,7 @@ export default function GerenciamentoUsuarioModal(props) {
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
   const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
 
-  function salvarUsuario() {
+  async function salvarUsuario() {
     let user = {
       nome: nome,
       cpf: cpf,
@@ -29,7 +31,9 @@ export default function GerenciamentoUsuarioModal(props) {
     //todo mensagens de erro
 
     if (user.nome !== null && user.cpf !== null && user.tipo !== null && user.email !== null && user.senha !== null) {
-      //todo adc user a um doc no firebase
+      console.log(user);
+      // await addDoc(collection(db, "usuario"), {user})
+
       props.setVisivel(false);
       props.setTexto('');
       setAvisoErroVisivel(false);
