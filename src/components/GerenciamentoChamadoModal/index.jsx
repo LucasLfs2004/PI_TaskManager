@@ -38,7 +38,7 @@ export default function GerenciamentoChamadoModal(props) {
 
     if(chamado.tipo !== null && chamado.reclamante !== null && chamado.aberturaData !== null && chamado.tipo !== null && chamado.descricao !==null){
       console.log(chamado)
-      // await addDoc(collection(db, "tarefa"), {chamado})
+      await addDoc(collection(db, "tarefa"), {chamado}).catch((erro) => console.log(erro))
 
       props.setVisivel(false);
       props.setTexto('');

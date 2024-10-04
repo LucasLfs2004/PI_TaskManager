@@ -32,7 +32,7 @@ export default function GerenciamentoUsuarioModal(props) {
 
     if (user.nome !== null && user.cpf !== null && user.tipo !== null && user.email !== null && user.senha !== null) {
       console.log(user);
-      // await addDoc(collection(db, "usuario"), {user})
+      await addDoc(collection(db, "usuario"), {user}).catch((erro) => {console.log(erro)})
 
       props.setVisivel(false);
       props.setTexto('');
