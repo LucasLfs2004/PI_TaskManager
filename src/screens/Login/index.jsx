@@ -9,9 +9,30 @@ import {
   View,
 } from 'react-native';
 import { scale } from '../../functions/scale';
+import { auth } from '../../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 
 const Login = ({ navigation }) => {
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
   const [checkInput, setCheckInput] = useState(false);
+
+const autenticar = () => {
+  signInWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {        
+        const user = userCredential.user;
+        console.log('Usuário:', user);
+        navigation.navigate('Home');
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        
+        console.error('Erro', errorMessage);
+      });
+    }
+ 
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,13 +44,18 @@ const Login = ({ navigation }) => {
         <Text style={styles.title}>Fazer login</Text>
         <View style={styles.inputArea}>
           <TextInput
-            placeholder='Email/CPF'
+            placeholder='Email'
             style={[
               styles.input,
               { borderColor: '#DCE2E5', borderBottomWidth: 1 },
             ]}
-          ></TextInput>
-          <TextInput placeholder='Senha' style={styles.input}></TextInput>
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput placeholder='Senha' style={styles.input}
+          value={senha}
+          onChangeText={setSenha}          
+          />
         </View>
         <View style={styles.row}>
           <View style={styles.rememberMe}>
@@ -46,7 +72,7 @@ const Login = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => navigation.navigate('Home')}
+          onPress={autenticar}
         >
           <Text style={styles.txtBtn}>Acessar plataforma</Text>
         </TouchableOpacity>
