@@ -41,7 +41,7 @@ const ListUsers = () => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <Header removePaddingTop={true} />
       <ScrollView style={{ marginBottom: scale(120) }}>
         <TouchableOpacity style={styles.btnCadastro} onPress={() => {setModalGerenciamentoUsuarioVisible(true)}}>
@@ -86,6 +86,9 @@ const ListUsers = () => {
 export default ListUsers;
 
 const styles = StyleSheet.create({
+  container:{
+    marginTop: 25,
+  },
   userCard: {
     backgroundColor: '',
     borderColor: 'transparent',
