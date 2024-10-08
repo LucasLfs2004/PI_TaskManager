@@ -5,8 +5,13 @@ import Header from '../Header';
 import { ModalStyles } from '../CommonStyles/Modal';
 import BotaoSubmit from '../BotaoSubmit';
 import AvisoDeErro from '../AvisoDeErro';
-import { db } from '../../config/firebase';
-import {collection, addDoc } from 'firebase/firestore';
+import { auth, db } from '../../config/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+// import { createUserWithEmailAndPassword } from '@react-native-firebase/auth';
+import 'firebase/auth';
 
 export default function GerenciamentoUsuarioModal(props) {
   const [nome, setNome] = useState(null);
@@ -14,9 +19,26 @@ export default function GerenciamentoUsuarioModal(props) {
   const [tipoUsuario, setTipoUsuario] = useState(null);
   const [emailUsuario, setEmailUsuario] = useState(null);
   const [senha, setSenha] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
-  const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
+  const [avisoErroMensagem, setAvisoErroMensagem] = useState(
+    'Mensagem de erro genérica',
+  );
+
+  const createUser = async (email, password) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      return userCredential;
+    } catch (error) {
+      console.log(error.code);
+      console.log(error.message);
+    }
+  };
 
   async function salvarUsuario() {
     let user = {
@@ -25,31 +47,54 @@ export default function GerenciamentoUsuarioModal(props) {
       tipo: tipoUsuario,
       email: emailUsuario,
       senha: senha,
+      isAdmin: isAdmin,
     };
 
     //todo validações das entradas
     //todo mensagens de erro
 
-    if (user.nome !== null && user.cpf !== null && user.tipo !== null && user.email !== null && user.senha !== null) {
-      console.log(user);
-      await addDoc(collection(db, "usuario"), {user}).catch((erro) => {console.log(erro)})
+    if (
+      user.nome !== null &&
+      user.cpf !== null &&
+      user.tipo !== null &&
+      user.email !== null &&
+      user.senha !== null
+    ) {
+      // console.log(user);
+
+      const userCredential = await createUser(user.email, user.senha);
+
+      if (userCredential.user.uid) {
+        user.uid = userCredential.user.uid;
+        await addDoc(collection(db, 'usuario'), { user })
+          .then(() => console.log('Adição de dados concluida'))
+          .catch(erro => {
+            console.log(erro);
+          });
+      } else {
+        setAvisoErroVisivel(false);
+        setAvisoErroMensagem('Não foi possível concluir o cadastro do usuário');
+      }
+      // userData = createUser(user.email, user.senha);
+      // console.log('Dados do auth: ', userData);
+      // console.log(userData);
 
       props.setVisivel(false);
       props.setTexto('');
-      setAvisoErroVisivel(false);
-      setAvisoErroMensagem('');
+      // setAvisoErroVisivel(false);
+      // setAvisoErroMensagem('');
       setNome(null);
       setCpf(null);
       setTipoUsuario(null);
       setEmailUsuario(null);
-      setSenha(null)
+      setSenha(null);
     } else {
       setAvisoErroVisivel(true);
       setAvisoErroMensagem('Todos os campos devem ser preenchidos');
     }
   }
 
-  function sair(){
+  function sair() {
     props.setVisivel(false);
     props.setTexto('');
     setAvisoErroVisivel(false);
@@ -124,7 +169,7 @@ export default function GerenciamentoUsuarioModal(props) {
       <BotaoSubmit
         text={'Sair'}
         action={() => {
-          sair()
+          sair();
         }}
       />
     </Modal>

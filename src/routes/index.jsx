@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../screens/home';
 import Login from '../screens/Login';
 import ListTasks from '../screens/ListTasks';
+import ListUsers from '../screens/ListUsers';
 
 const Routes = () => {
   const Stack = createNativeStackNavigator();
@@ -24,6 +25,11 @@ const Routes = () => {
           options={{ headerShown: false }}
           name='Tasks'
           component={ListTasks}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name='Users'
+          component={ListUsers}
         />
       </Stack.Navigator>
     </NavigationContainer>

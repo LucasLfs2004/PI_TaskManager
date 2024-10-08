@@ -9,6 +9,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+import { scale } from '../../functions/scale';
 import TaskCard from '../../components/TaskCard';
 import Header from '../../components/Header';
 import BotaoGerenciamento from '../../components/BotaoGerenciamento';
@@ -61,7 +62,8 @@ const Home = props => {
         <BotaoGerenciamento
           texto='Gerenciar Usuario'
           abrir={() => {
-            setModalGerenciamentoUsuarioVisible(true);
+            navigation.navigate('Users');
+            // setModalGerenciamentoUsuarioVisible(true);
             setTextoTituloModal('Gerenciar Usuario');
           }}
         />
