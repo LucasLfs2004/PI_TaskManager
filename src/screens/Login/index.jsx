@@ -11,29 +11,26 @@ import {
 import { scale } from '../../functions/scale';
 import { auth } from '../../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-
-
+import ModalResetPass from '../../components/RecuperarSenha';
 
 const Login = ({ navigation }) => {
-
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [checkInput, setCheckInput] = useState(false);
-
-const autenticar = () => {
-  signInWithEmailAndPassword(auth, email, senha)
-      .then((userCredential) => {        
+  const [resetPasseVisible, setResetPassVisible] = useState(false);
+  const autenticar = () => {
+    signInWithEmailAndPassword(auth, email, senha)
+      .then(userCredential => {
         const user = userCredential.user;
         console.log('Usuário:', user);
         navigation.navigate('Home');
       })
-      .catch((error) => {
+      .catch(error => {
         const errorMessage = error.message;
-        
+
         console.error('Erro', errorMessage);
       });
-    }
- 
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,9 +50,11 @@ const autenticar = () => {
             value={email}
             onChangeText={setEmail}
           />
-          <TextInput placeholder='Senha' style={styles.input}
-          value={senha}
-          onChangeText={setSenha}          
+          <TextInput
+            placeholder='Senha'
+            style={styles.input}
+            value={senha}
+            onChangeText={setSenha}
           />
         </View>
         <View style={styles.row}>
@@ -69,12 +68,11 @@ const autenticar = () => {
             ></TouchableOpacity>
             <Text style={styles.text}>Lembrar-me</Text>
           </View>
-          <Text style={styles.text}>Esqueci minha senha</Text>
+          <Text onPress={() => setResetPassVisible(true)} style={styles.text}>
+            Esqueci minha senha
+          </Text>
         </View>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={autenticar}
-        >
+        <TouchableOpacity style={styles.btn} onPress={autenticar}>
           <Text style={styles.txtBtn}>Acessar plataforma</Text>
         </TouchableOpacity>
         <View style={styles.rowAviso}>
@@ -82,6 +80,10 @@ const autenticar = () => {
           <Text>Acesso restrito à funcionários</Text>
         </View>
       </View>
+      <ModalResetPass
+        visible={resetPasseVisible}
+        closeModal={() => setResetPassVisible(false)}
+      />
     </SafeAreaView>
   );
 };
