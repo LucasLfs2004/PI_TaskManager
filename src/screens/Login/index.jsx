@@ -54,6 +54,7 @@ const Login = ({ navigation }) => {
             placeholder='Senha'
             style={styles.input}
             value={senha}
+            secureTextEntry={true}
             onChangeText={setSenha}
           />
         </View>

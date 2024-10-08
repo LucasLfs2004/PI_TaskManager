@@ -14,9 +14,11 @@ import { collection, getDoc, getDocs, query } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
+import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
 
 const ListUsers = () => {
   const [usuario, setUsuario] = useState();
+  const [modalGerenciamentoUsuarioVisible, setModalGerenciamentoUsuarioVisible] = useState(false)
 
   const usersCollection = collection(db, 'usuario');
   const getUsuario = async () => {
@@ -42,7 +44,7 @@ const ListUsers = () => {
     <SafeAreaView>
       <Header removePaddingTop={true} />
       <ScrollView style={{ marginBottom: scale(120) }}>
-        <TouchableOpacity style={styles.btnCadastro}>
+        <TouchableOpacity style={styles.btnCadastro} onPress={() => {setModalGerenciamentoUsuarioVisible(true)}}>
           <Text style={styles.textBtn}>Cadastrar usuário</Text>
         </TouchableOpacity>
         {usuario?.map((item, key) => (
@@ -71,6 +73,12 @@ const ListUsers = () => {
           </View>
         ))}
       </ScrollView>
+      <GerenciamentoUsuarioModal
+        visivel={modalGerenciamentoUsuarioVisible}
+        titulo={'Gerenciar Usuario'}
+        setVisivel={setModalGerenciamentoUsuarioVisible}
+        setTexto={() => {}}
+      />
     </SafeAreaView>
   );
 };

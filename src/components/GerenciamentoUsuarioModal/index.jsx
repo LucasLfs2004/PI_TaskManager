@@ -155,6 +155,7 @@ export default function GerenciamentoUsuarioModal(props) {
           <Text style={styles.textoInfoUsuario}>Senha</Text>
           <TextInput
             placeholder='***********'
+            secureTextEntry={true}
             onChangeText={setSenha}
             style={ModalStyles.input}
           />
