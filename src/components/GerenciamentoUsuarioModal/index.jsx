@@ -41,7 +41,7 @@ export default function GerenciamentoUsuarioModal(props) {
       const userCredential = await criarUsuario(user.email, user.senha);
       if (userCredential?.user?.uid) {
         user.uid = userCredential.user.uid;
-        await armazenarUsuario(user);
+        await armazenarDadosUsuario(user);
       } else {
         setAvisoErroVisivel(false);
         setAvisoErroMensagem('Não foi possível concluir o cadastro do usuário');
@@ -74,7 +74,7 @@ export default function GerenciamentoUsuarioModal(props) {
     setEmailUsuario(null);
     setSenha(null);
   }
-  const armazenarUsuario = async (user) =>{
+  const armazenarDadosUsuario = async (user) =>{
     await addDoc(collection(db, 'usuario'), { user })
     .then(() => console.log('Adição de dados concluida'))
     .catch(erro => console.log(erro));
