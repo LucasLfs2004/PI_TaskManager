@@ -92,7 +92,7 @@ export default function GerenciamentoChamadoModal(props) {
            textInput:modalStyles.input
         }}/>
      <View style={styles.linhaTipoData}>
-            <EntradaTexto  placeholder='Data de abertura do chamado' modelValue={setAberturaData} texto='17/09/2024' style={{
+            <EntradaTexto  placeholder='Data de abertura do chamado' modelValue={setAberturaData} texto='DD/MM/YYYY' style={{
             view: [styles.campoMetade, { marginRight: 5 }],
             text: styles.textoInfoChamado,
             textInput:modalStyles.input
