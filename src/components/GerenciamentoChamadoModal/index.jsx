@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   Modal,
   View,
   Text,
   TextInput,
-  Image
+  Image,
+  Picker
 } from 'react-native';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,8 +16,9 @@ import { scale } from '../../functions/scale';
 import AvisoDeErro from '../AvisoDeErro';
 import { useState } from 'react';
 import { db } from '../../config/firebase';
-import {collection, addDoc } from 'firebase/firestore';
+import {collection, addDoc, getDocs } from 'firebase/firestore';
 import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export default function GerenciamentoChamadoModal(props) {
   const [tituloChamado, setTituloChamado] = useState(null);
@@ -27,14 +29,49 @@ export default function GerenciamentoChamadoModal(props) {
 
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
   const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
+  const [uidRequerente, setUidRequerente] = useState(null); 
 
+  const [usuarios, setUsuarios] = useState([]);
+  const [uidResponsavel, setUidResponsavel] = useState('');
+
+
+  useEffect(() => {
+    const auth = getAuth(); // Inicializa o Firebase Auth
+    const buscarUsuarios = () =>{      
+      getDocs(collection(db, "usuario"))
+      .then((querySnapshot) => {
+        const usuariosData = [];
+        querySnapshot.forEach((doc) => {
+          usuariosData.push({ id: doc.id, ...doc.data().user });
+        });
+        setUsuarios(usuariosData);
+        console.log(usuariosData)
+      })
+      .catch((erro) => {
+        console.error("Erro ao recuperar usuários: ", erro);
+      });
+    };
+    const removerListenerAutenticacao = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUidRequerente(user.uid); 
+        console.log('antes')
+        buscarUsuarios()
+      } else {
+        setUidRequerente(null); 
+      }
+    });    
+    
+    return () => removerListenerAutenticacao();
+  }, []);
   async function salvarChamado(){
-    let chamado = {
+    const chamado = {
       titulo: tituloChamado,
       reclamante: reclamanteChamado,
       aberturaData: aberturaData,
       tipo: tipoChamado,
-      descricao: descricaoChamado
+      descricao: descricaoChamado,
+      uidRequerente,
+      uidResponsavel
     }
 
     if(Object.values(chamado).every((value) => value !== null)){
@@ -80,6 +117,19 @@ export default function GerenciamentoChamadoModal(props) {
         <Text style={styles.textoPrincipal}>{props.titulo}</Text>
       </LinearGradient>
       <View style={styles.formularioTarefa}>
+
+      <Text  style={[styles.textoInfoChamado, {marginLeft: 10}]}>Responsável:</Text>
+        <Picker
+          selectedValue={uidResponsavel}
+          style={[styles.picker, styles.input]}
+          onValueChange={(itemValue) => setUidResponsavel(itemValue)}
+        >
+          <Picker.Item label="Selecione um usuário" value={null} />
+          {usuarios.map(usuario => (
+            <Picker.Item key={usuario.id} label={usuario.nome} value={usuario.uid} />
+          ))}
+        </Picker>
+
         <EntradaTexto  placeholder='Título' modelValue={setTituloChamado} texto='Título da tarefa' style={{
           view: styles.areaReclamante,
           text: styles.textoInfoChamado,
@@ -169,6 +219,11 @@ const styles = StyleSheet.create({
     borderColor: '#DCE2E5',
     backgroundColor: '#F5F8FA',
     padding: 8,
+  },
+  picker: {    
+    fontSize: scale(14),
+    margin: 10
+
   },
   tipoChamado: {
     width: 150,

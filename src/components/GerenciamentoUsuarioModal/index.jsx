@@ -7,7 +7,7 @@ import BotaoSubmit from '../BotaoSubmit';
 import AvisoDeErro from '../AvisoDeErro';
 import { auth, db } from '../../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
 
 export default function GerenciamentoUsuarioModal(props) {
@@ -21,44 +21,46 @@ export default function GerenciamentoUsuarioModal(props) {
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
   const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
 
-  const criarUsuario = async (email, password) => {
-     createUserWithEmailAndPassword(auth,email,password,)
+  const criarUsuario = async (email, password) => {    
+    return  createUserWithEmailAndPassword(auth,email,password,)
      .then((response)=>{
+      console.log(response)
       return response;
      })
-     .catch(()=>{
-      console.log(error.code);
-      console.log(error.message);
+     .catch((e)=>{
+      throw new Error(e.message)
      })
   
   };
 
   async function salvarUsuario() {
-    const user = { nome, cpf, tipo: tipoUsuario, email: emailUsuario, senha };
-    const camposEstaoPreenchidos = Object.values(user).every(value => value);
+    const usuario = { nome, cpf, tipo: tipoUsuario, email: emailUsuario, senha };
+    const camposEstaoPreenchidos = Object.values(usuario).every(value => value);
     
-    if (camposEstaoPreenchidos) {      
-      const userCredential = await criarUsuario(user.email, user.senha);
-      if (userCredential?.user?.uid) {
-        user.uid = userCredential.user.uid;
-        await armazenarDadosUsuario(user);
-      } else {
-        setAvisoErroVisivel(false);
-        setAvisoErroMensagem('Não foi possível concluir o cadastro do usuário');
-      }
-      // userData = createUser(user.email, user.senha);
-      // console.log('Dados do auth: ', userData);
-      // console.log(userData);
-
-      props.setVisivel(false);
-      props.setTexto('');
-      // setAvisoErroVisivel(false);
-      // setAvisoErroMensagem('');
-      limparCampos();
-    } else {
+    if (!camposEstaoPreenchidos) {
       setAvisoErroVisivel(true);
       setAvisoErroMensagem('Todos os campos devem ser preenchidos');
-    }
+      return;
+    }            
+     criarUsuario(usuario.email, usuario.senha)
+    .then((response)=>{  
+      console.log('externo')
+      console.log(response)    
+      atualizarPerfilUsuario(response.user)          
+      armazenarDadosUsuario( response.user);        
+
+    })
+    .catch(()=>{
+      setAvisoErroVisivel(false);
+      setAvisoErroMensagem('Não foi possível concluir o cadastro do usuário');
+    })
+
+    props.setVisivel(false);
+    props.setTexto('');
+    // setAvisoErroVisivel(false);
+    // setAvisoErroMensagem('');
+    limparCampos();
+    
   }
 
   function sair() {
@@ -74,11 +76,27 @@ export default function GerenciamentoUsuarioModal(props) {
     setEmailUsuario(null);
     setSenha(null);
   }
-  const armazenarDadosUsuario = async (user) =>{
-    await addDoc(collection(db, 'usuario'), { user })
-    .then(() => console.log('Adição de dados concluida'))
+  const armazenarDadosUsuario =  (usuario) =>{    
+    const user = {nome, cpf, isAdmin: false, tipo: tipoUsuario,  uid: usuario.uid}    
+     return addDoc(collection(db, 'usuario'), { user })
+    .then(() => {
+      console.log('Adição de dados concluida')
+      return
+    })
     .catch(erro => console.log(erro));
   }
+
+  const atualizarPerfilUsuario = async (usuario) => {
+    if (usuario) {      
+      return updateProfile(usuario, { displayName: nome })
+        .then(() => {
+          console.log('nome atualizado');
+        })
+        .catch(() => {
+          console.log('Ocorreu um erro!');
+        });
+    }
+  };
   return (
     <Modal
       visible={props.visivel}
@@ -127,7 +145,7 @@ export default function GerenciamentoUsuarioModal(props) {
      
       </View>
       <BotaoSubmit
-        text={'Concluir nova tarefa'}
+        text={'Cadastrar novo usuário'}
         action={() => {
           salvarUsuario();
         }}
