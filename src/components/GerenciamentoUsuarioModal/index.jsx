@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Modal, View, Text, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../Header';
-import { ModalStyles } from '../CommonStyles/Modal';
+import { modalStyles } from '../CommonStyles/Modal';
 import BotaoSubmit from '../BotaoSubmit';
 import AvisoDeErro from '../AvisoDeErro';
 import { auth, db } from '../../config/firebase';
@@ -103,7 +103,7 @@ export default function GerenciamentoUsuarioModal(props) {
   return (
     <Modal
       visible={props.visivel}
-      style={ModalStyles.container}
+      style={modalStyles.container}
       animationType='slide'
     >
       <Header />
@@ -122,7 +122,7 @@ export default function GerenciamentoUsuarioModal(props) {
           <TextInput
             placeholder='Nome do Usuário'
             onChangeText={setNome}
-            style={ModalStyles.input}
+            style={modalStyles.input}
           />
         </View>
         <View style={styles.areaTipoUsuario}>
@@ -131,7 +131,7 @@ export default function GerenciamentoUsuarioModal(props) {
             <TextInput
               placeholder='000.000.000-00'
               onChangeText={setCpf}
-              style={[ModalStyles.input, ModalStyles.inputCPF, styles.inputCPF]}
+              style={[modalStyles.input, modalStyles.inputCPF, styles.inputCPF]}
             />
           </View>
           <View>
@@ -139,7 +139,7 @@ export default function GerenciamentoUsuarioModal(props) {
             <TextInput
               placeholder='Tipo'
               onChangeText={setTipoUsuario}
-              style={[ModalStyles.input, styles.tipoUsuario]}
+              style={[modalStyles.input, styles.tipoUsuario]}
             />
           </View>
         </View>
@@ -148,7 +148,7 @@ export default function GerenciamentoUsuarioModal(props) {
           <TextInput
             placeholder='email@email.com'
             onChangeText={setEmailUsuario}
-            style={ModalStyles.input}
+            style={modalStyles.input}
           />
         </View>
         <View style={styles.areaSenha}>
@@ -157,7 +157,7 @@ export default function GerenciamentoUsuarioModal(props) {
             placeholder='***********'
             secureTextEntry={true}
             onChangeText={setSenha}
-            style={ModalStyles.input}
+            style={modalStyles.input}
           />
         </View>
       </View>

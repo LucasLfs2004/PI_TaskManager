@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ModalStyles } from '../CommonStyles/Modal';
+import { modalStyles } from '../CommonStyles/Modal';
 import BotaoSubmit from '../BotaoSubmit';
 import { scale } from '../../functions/scale';
 
@@ -17,7 +17,7 @@ export default function RelatorioDeTarefaModal(props) {
   return (
     <Modal
       visible={props.visivel}
-      style={ModalStyles.container}
+      style={modalStyles.container}
       animationType='slide'
     >
       <Header />
@@ -33,13 +33,13 @@ export default function RelatorioDeTarefaModal(props) {
         <View style={styles.areaPeriodo}>
           <Text style={styles.tituloPesquisa}>Período da pesquisa</Text>
           <View style={styles.areaDatas}>
-            <View style={ModalStyles.inputArea}>
+            <View style={modalStyles.inputArea}>
               <Text>Data inicial</Text>
-              <TextInput placeholder='00/00/0000' style={ModalStyles.input} />
+              <TextInput placeholder='00/00/0000' style={modalStyles.input} />
             </View>
-            <View style={ModalStyles.inputArea}>
+            <View style={modalStyles.inputArea}>
               <Text>Data Final</Text>
-              <TextInput placeholder='00/00/0000' style={ModalStyles.input} />
+              <TextInput placeholder='00/00/0000' style={modalStyles.input} />
             </View>
           </View>
         </View>
@@ -48,7 +48,7 @@ export default function RelatorioDeTarefaModal(props) {
             <Text style={styles.tituloRelatorio}>
               Quais tarefas deseja consultar?
             </Text>
-            <TextInput style={[ModalStyles.input, styles.inputTarefa]} />
+            <TextInput style={[modalStyles.input, styles.inputTarefa]} />
           </View>
           <TouchableOpacity style={styles.botaoGerarRelatorio}>
             <Text style={styles.textGerarRelatorio}>Gerar relatório</Text>

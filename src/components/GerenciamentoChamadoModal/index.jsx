@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ModalStyles } from '../CommonStyles/Modal';
+import { modalStyles } from '../CommonStyles/Modal';
 import BotaoSubmit from '../BotaoSubmit';
 import { scale } from '../../functions/scale';
 import AvisoDeErro from '../AvisoDeErro';
 import { useState } from 'react';
 import { db } from '../../config/firebase';
 import {collection, addDoc } from 'firebase/firestore';
+import { EntradaTexto } from './EntradaTexto';
 
 export default function GerenciamentoChamadoModal(props) {
   const [tituloChamado, setTituloChamado] = useState(null);
@@ -36,7 +37,7 @@ export default function GerenciamentoChamadoModal(props) {
       descricao: descricaoChamado
     }
 
-    if(chamado.tipo !== null && chamado.reclamante !== null && chamado.aberturaData !== null && chamado.tipo !== null && chamado.descricao !==null){
+    if(Object.values(chamado).every((value) => value !== null)){
       console.log(chamado)
       await addDoc(collection(db, "tarefa"), {chamado}).catch((erro) => console.log(erro))
 
@@ -65,7 +66,7 @@ export default function GerenciamentoChamadoModal(props) {
   return (
     <Modal
       visible={props.visivel}
-      style={ModalStyles.container}
+      style={modalStyles.container}
       animationType='slide'
     >
       <Header />
@@ -79,38 +80,34 @@ export default function GerenciamentoChamadoModal(props) {
         <Text style={styles.textoPrincipal}>{props.titulo}</Text>
       </LinearGradient>
       <View style={styles.formularioTarefa}>
-        <View style={[styles.areaReclamante, ModalStyles.inputArea]}>
-          <Text style={styles.textoInfoChamado}>Título</Text>
-          <TextInput placeholder='Título da tarefa' onChangeText={setTituloChamado} style={ModalStyles.input} />
+        <EntradaTexto  placeholder='Título' modelValue={setTituloChamado} texto='Título da tarefa' style={{
+          view: styles.areaReclamante,
+          text: styles.textoInfoChamado,
+          textInput:modalStyles.input
+        }}/>
+      
+          <EntradaTexto  placeholder='Reclamante' modelValue={setReclamanteChamado} texto='Usuario Reclamante' style={{
+           view: styles.areaReclamante,
+           text: styles.textoInfoChamado,
+           textInput:modalStyles.input
+        }}/>
+     <View style={styles.linhaTipoData}>
+            <EntradaTexto  placeholder='Data de abertura do chamado' modelValue={setAberturaData} texto='17/09/2024' style={{
+            view: [styles.campoMetade, { marginRight: 5 }],
+            text: styles.textoInfoChamado,
+            textInput:modalStyles.input
+          }}/>                   
+            <EntradaTexto  placeholder='Tipo do chamado' modelValue={setTipoChamado} texto='Tarefa' style={{
+            view: [styles.campoMetade, { marginRight: 5 }],
+            text: styles.textoInfoChamado,
+            textInput:modalStyles.input
+          }}/>       
         </View>
-        <View style={[styles.areaReclamante, ModalStyles.inputArea]}>
-          <Text style={styles.textoInfoChamado}>Reclamante</Text>
-          <TextInput
-            placeholder='Usuario Reclamante'
-            onChangeText={setReclamanteChamado}
-            style={ModalStyles.input}
-          />
-        </View>
-        <View style={styles.areaTipoChamado}>
-          <View style={ModalStyles.inputArea}>
-            <Text style={styles.textoInfoChamado}>
-              Data de abertura do chamado
-            </Text>
-            <TextInput placeholder='17/09/2024' onChangeText={setAberturaData} style={ModalStyles.input} />
-          </View>
-          <View style={ModalStyles.inputArea}>
-            <Text style={styles.textoInfoChamado}>Tipo do chamado</Text>
-            <TextInput
-              placeholder='Tarefa'
-              onChangeText={setTipoChamado}
-              style={[ModalStyles.input, styles.tipoChamado]}
-            />
-          </View>
-        </View>
-        <View style={[styles.areaDescricao, ModalStyles.inputArea]}>
-          <Text style={styles.textoInfoChamado}>Descrição</Text>
-          <TextInput placeholder='Descrição' onChangeText={setDescricaoChamado} style={ModalStyles.input} />
-        </View>
+         <EntradaTexto  placeholder='Descrição' modelValue={setDescricaoChamado} texto='Descrição' style={{
+           view: styles.areaDescricao,
+           text: styles.textoInfoChamado,
+           textInput:modalStyles.input
+        }}/>          
       </View>
 
       <BotaoSubmit
@@ -156,13 +153,15 @@ const styles = StyleSheet.create({
   areaReclamante: {
     margin: 10,
   },
-  areaTipoChamado: {
+  
+  linhaTipoData: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginRight: 10,
-    marginLeft: 10,
+    margin: 10,
   },
+  campoMetade: {
+    flex: 1, // Para dividir igualmente os campos na linha
+  },
+
   input: {
     borderStyle: 'solid',
     borderRadius: 8,

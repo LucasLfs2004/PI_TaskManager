@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { scale } from "../../functions/scale";
 
 
-export const ModalStyles = StyleSheet.create({
+export const modalStyles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: scale(80),
