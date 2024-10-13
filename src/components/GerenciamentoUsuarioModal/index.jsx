@@ -7,11 +7,8 @@ import BotaoSubmit from '../BotaoSubmit';
 import AvisoDeErro from '../AvisoDeErro';
 import { auth, db } from '../../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
-import firebase from 'firebase/compat/app';
-
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-// import { createUserWithEmailAndPassword } from '@react-native-firebase/auth';
-import 'firebase/auth';
+import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
 
 export default function GerenciamentoUsuarioModal(props) {
   const [nome, setNome] = useState(null);
@@ -22,55 +19,29 @@ export default function GerenciamentoUsuarioModal(props) {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
-  const [avisoErroMensagem, setAvisoErroMensagem] = useState(
-    'Mensagem de erro genérica',
-  );
+  const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
 
-  const createUser = async (email, password) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      return userCredential;
-    } catch (error) {
+  const criarUsuario = async (email, password) => {
+     createUserWithEmailAndPassword(auth,email,password,)
+     .then((response)=>{
+      return response;
+     })
+     .catch(()=>{
       console.log(error.code);
       console.log(error.message);
-    }
+     })
+  
   };
 
   async function salvarUsuario() {
-    let user = {
-      nome: nome,
-      cpf: cpf,
-      tipo: tipoUsuario,
-      email: emailUsuario,
-      senha: senha,
-      isAdmin: isAdmin,
-    };
-
-    //todo validações das entradas
-    //todo mensagens de erro
-
-    if (
-      user.nome !== null &&
-      user.cpf !== null &&
-      user.tipo !== null &&
-      user.email !== null &&
-      user.senha !== null
-    ) {
-      // console.log(user);
-
-      const userCredential = await createUser(user.email, user.senha);
-
-      if (userCredential.user.uid) {
+    const user = { nome, cpf, tipo: tipoUsuario, email: emailUsuario, senha };
+    const camposEstaoPreenchidos = Object.values(user).every(value => value);
+    
+    if (camposEstaoPreenchidos) {      
+      const userCredential = await criarUsuario(user.email, user.senha);
+      if (userCredential?.user?.uid) {
         user.uid = userCredential.user.uid;
-        await addDoc(collection(db, 'usuario'), { user })
-          .then(() => console.log('Adição de dados concluida'))
-          .catch(erro => {
-            console.log(erro);
-          });
+        await armazenarUsuario(user);
       } else {
         setAvisoErroVisivel(false);
         setAvisoErroMensagem('Não foi possível concluir o cadastro do usuário');
@@ -83,11 +54,7 @@ export default function GerenciamentoUsuarioModal(props) {
       props.setTexto('');
       // setAvisoErroVisivel(false);
       // setAvisoErroMensagem('');
-      setNome(null);
-      setCpf(null);
-      setTipoUsuario(null);
-      setEmailUsuario(null);
-      setSenha(null);
+      limparCampos();
     } else {
       setAvisoErroVisivel(true);
       setAvisoErroMensagem('Todos os campos devem ser preenchidos');
@@ -100,6 +67,18 @@ export default function GerenciamentoUsuarioModal(props) {
     setAvisoErroVisivel(false);
   }
 
+  const limparCampos = () => {
+    setNome(null);
+    setCpf(null);
+    setTipoUsuario(null);
+    setEmailUsuario(null);
+    setSenha(null);
+  }
+  const armazenarUsuario = async (user) =>{
+    await addDoc(collection(db, 'usuario'), { user })
+    .then(() => console.log('Adição de dados concluida'))
+    .catch(erro => console.log(erro));
+  }
   return (
     <Modal
       visible={props.visivel}
@@ -116,50 +95,36 @@ export default function GerenciamentoUsuarioModal(props) {
       >
         <Text style={styles.textoPrincipal}>{props.titulo}</Text>
       </LinearGradient>
+     
       <View style={styles.formularioTarefa}>
-        <View style={styles.areaReclamante}>
-          <Text style={styles.textoInfoUsuario}>Nome do usuario</Text>
-          <TextInput
-            placeholder='Nome do Usuário'
-            onChangeText={setNome}
-            style={modalStyles.input}
-          />
+      <EntradaTexto  placeholder='Nome do usuario' modelValue={setNome} texto='Nome do Usuário' style={{
+          view: styles.areaReclamante,
+          text: styles.textoInfoUsuario,
+          textInput:modalStyles.input
+        }}/>        
+        <View style={styles.linha}>        
+        <EntradaTexto  placeholder='N° do CPF' modelValue={setCpf} texto='000.000.000-00' style={{
+          view: [styles.campoMetade, { marginRight: 5 }],
+          text: styles.textoInfoUsuario,
+          textInput:[modalStyles.input, modalStyles.inputCPF]
+        }}/>        
+         <EntradaTexto placeholder='Tipo do Usuário' modelValue={setTipoUsuario} texto='Tipo' style={{
+          view: [styles.campoMetade, { marginRight: 5 }],
+          text: styles.textoInfoUsuario,
+          textInput:[modalStyles.input]
+        }}/>         
         </View>
-        <View style={styles.areaTipoUsuario}>
-          <View>
-            <Text style={styles.textoInfoUsuario}>N° do CPF</Text>
-            <TextInput
-              placeholder='000.000.000-00'
-              onChangeText={setCpf}
-              style={[modalStyles.input, modalStyles.inputCPF, styles.inputCPF]}
-            />
-          </View>
-          <View>
-            <Text style={styles.textoInfoUsuario}>Tipo do Usuário</Text>
-            <TextInput
-              placeholder='Tipo'
-              onChangeText={setTipoUsuario}
-              style={[modalStyles.input, styles.tipoUsuario]}
-            />
-          </View>
-        </View>
-        <View style={styles.areaEmail}>
-          <Text style={styles.textoInfoUsuario}>E-mail do usuário</Text>
-          <TextInput
-            placeholder='email@email.com'
-            onChangeText={setEmailUsuario}
-            style={modalStyles.input}
-          />
-        </View>
-        <View style={styles.areaSenha}>
-          <Text style={styles.textoInfoUsuario}>Senha</Text>
-          <TextInput
-            placeholder='***********'
-            secureTextEntry={true}
-            onChangeText={setSenha}
-            style={modalStyles.input}
-          />
-        </View>
+        <EntradaTexto placeholder='E-mail do usuário' modelValue={setEmailUsuario} texto='email@email.com' style={{
+          view: styles.areaEmail,
+          text: styles.textoInfoUsuario,
+          textInput: modalStyles.input
+        }}/>     
+     <EntradaTexto placeholder='Senha' modelValue={setSenha} texto='***********' style={{
+          view: styles.areaSenha,
+          text: styles.textoInfoUsuario,
+          textInput: modalStyles.input
+        }} secureTextEntry={true}/>  
+     
       </View>
       <BotaoSubmit
         text={'Concluir nova tarefa'}
@@ -189,9 +154,6 @@ const styles = StyleSheet.create({
     color: '#3C3A9B',
     fontSize: 25,
   },
-  formularioTarefa: {
-    // flex: 1,
-  },
   areaReclamante: {
     margin: 10,
   },
@@ -201,6 +163,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginRight: 10,
     marginLeft: 10,
+  },
+
+  linha: {
+    flexDirection: 'row',
+    margin: 10,
+  },
+  campoMetade: {
+    flex: 1, 
   },
   input: {
     borderStyle: 'solid',
@@ -213,9 +183,7 @@ const styles = StyleSheet.create({
   inputCPF: {
     width: 180,
   },
-  tipoUsuario: {
-    width: 150,
-  },
+ 
   textoInfoUsuario: {
     color: '#617480',
     fontSize: 10,

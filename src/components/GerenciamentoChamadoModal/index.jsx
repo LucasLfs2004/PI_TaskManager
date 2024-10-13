@@ -16,7 +16,7 @@ import AvisoDeErro from '../AvisoDeErro';
 import { useState } from 'react';
 import { db } from '../../config/firebase';
 import {collection, addDoc } from 'firebase/firestore';
-import { EntradaTexto } from './EntradaTexto';
+import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
 
 export default function GerenciamentoChamadoModal(props) {
   const [tituloChamado, setTituloChamado] = useState(null);
@@ -91,7 +91,7 @@ export default function GerenciamentoChamadoModal(props) {
            text: styles.textoInfoChamado,
            textInput:modalStyles.input
         }}/>
-     <View style={styles.linhaTipoData}>
+     <View style={styles.linha}>
             <EntradaTexto  placeholder='Data de abertura do chamado' modelValue={setAberturaData} texto='dd/mm/aaaa' style={{
             view: [styles.campoMetade, { marginRight: 5 }],
             text: styles.textoInfoChamado,
@@ -154,12 +154,12 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   
-  linhaTipoData: {
+  linha: {
     flexDirection: 'row',
     margin: 10,
   },
   campoMetade: {
-    flex: 1, // Para dividir igualmente os campos na linha
+    flex: 1, 
   },
 
   input: {
