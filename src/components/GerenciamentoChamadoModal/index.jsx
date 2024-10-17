@@ -1,13 +1,6 @@
 import React, { useEffect } from 'react';
-import {
-  StyleSheet,
-  Modal,
-  View,
-  Text,
-  TextInput,
-  Image,
-  Picker
-} from 'react-native';
+import { StyleSheet, Modal, View, Text, TextInput, Image } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
 import { modalStyles } from '../CommonStyles/Modal';
@@ -16,7 +9,7 @@ import { scale } from '../../functions/scale';
 import AvisoDeErro from '../AvisoDeErro';
 import { useState } from 'react';
 import { db } from '../../config/firebase';
-import {collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
@@ -28,42 +21,43 @@ export default function GerenciamentoChamadoModal(props) {
   const [descricaoChamado, setDescricaoChamado] = useState(null);
 
   const [avisoErroVisivel, setAvisoErroVisivel] = useState(false);
-  const [avisoErroMensagem, setAvisoErroMensagem] = useState('Mensagem de erro genérica');
-  const [uidRequerente, setUidRequerente] = useState(null); 
+  const [avisoErroMensagem, setAvisoErroMensagem] = useState(
+    'Mensagem de erro genérica',
+  );
+  const [uidRequerente, setUidRequerente] = useState(null);
 
   const [usuarios, setUsuarios] = useState([]);
   const [uidResponsavel, setUidResponsavel] = useState('');
 
-
   useEffect(() => {
     const auth = getAuth(); // Inicializa o Firebase Auth
-    const buscarUsuarios = () =>{      
-      getDocs(collection(db, "usuario"))
-      .then((querySnapshot) => {
-        const usuariosData = [];
-        querySnapshot.forEach((doc) => {
-          usuariosData.push({ id: doc.id, ...doc.data().user });
+    const buscarUsuarios = () => {
+      getDocs(collection(db, 'usuario'))
+        .then(querySnapshot => {
+          const usuariosData = [];
+          querySnapshot.forEach(doc => {
+            usuariosData.push({ id: doc.id, ...doc.data().user });
+          });
+          setUsuarios(usuariosData);
+          console.log(usuariosData);
+        })
+        .catch(erro => {
+          console.error('Erro ao recuperar usuários: ', erro);
         });
-        setUsuarios(usuariosData);
-        console.log(usuariosData)
-      })
-      .catch((erro) => {
-        console.error("Erro ao recuperar usuários: ", erro);
-      });
     };
-    const removerListenerAutenticacao = onAuthStateChanged(auth, (user) => {
+    const removerListenerAutenticacao = onAuthStateChanged(auth, user => {
       if (user) {
-        setUidRequerente(user.uid); 
-        console.log('antes')
-        buscarUsuarios()
+        setUidRequerente(user.uid);
+        console.log('antes');
+        buscarUsuarios();
       } else {
-        setUidRequerente(null); 
+        setUidRequerente(null);
       }
-    });    
-    
+    });
+
     return () => removerListenerAutenticacao();
   }, []);
-  async function salvarChamado(){
+  async function salvarChamado() {
     const chamado = {
       titulo: tituloChamado,
       reclamante: reclamanteChamado,
@@ -71,34 +65,35 @@ export default function GerenciamentoChamadoModal(props) {
       tipo: tipoChamado,
       descricao: descricaoChamado,
       uidRequerente,
-      uidResponsavel
-    }
+      uidResponsavel,
+    };
 
-    if(Object.values(chamado).every((value) => value !== null)){
-      console.log(chamado)
-      await addDoc(collection(db, "tarefa"), {chamado}).catch((erro) => console.log(erro))
+    if (Object.values(chamado).every(value => value !== null)) {
+      console.log(chamado);
+      await addDoc(collection(db, 'tarefa'), { chamado }).catch(erro =>
+        console.log(erro),
+      );
 
       props.setVisivel(false);
       props.setTexto('');
       setAvisoErroVisivel(false);
-      setAvisoErroMensagem("");
+      setAvisoErroMensagem('');
       setTituloChamado(null);
       setReclamanteChamado(null);
       setAberturaData(null);
       setTipoChamado(null);
       setDescricaoChamado(null);
-    }else {
+    } else {
       setAvisoErroVisivel(true);
-      setAvisoErroMensagem("Todos os campos devem ser preenchidos");
+      setAvisoErroMensagem('Todos os campos devem ser preenchidos');
     }
   }
 
-  function sair(){
+  function sair() {
     props.setVisivel(false);
     props.setTexto('');
     setAvisoErroVisivel(false);
   }
-
 
   return (
     <Modal
@@ -107,7 +102,7 @@ export default function GerenciamentoChamadoModal(props) {
       animationType='slide'
     >
       <Header />
-      <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem}/>
+      <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem} />
       <LinearGradient
         style={styles.areaTextoPrincipal}
         colors={['#8D9CD3', '#FFF']}
@@ -117,59 +112,89 @@ export default function GerenciamentoChamadoModal(props) {
         <Text style={styles.textoPrincipal}>{props.titulo}</Text>
       </LinearGradient>
       <View style={styles.formularioTarefa}>
-
-      <Text  style={[styles.textoInfoChamado, {marginLeft: 10}]}>Responsável:</Text>
+        <Text style={[styles.textoInfoChamado, { marginLeft: 10 }]}>
+          Responsável:
+        </Text>
         <Picker
           selectedValue={uidResponsavel}
           style={[styles.picker, styles.input]}
-          onValueChange={(itemValue) => setUidResponsavel(itemValue)}
+          onValueChange={itemValue => setUidResponsavel(itemValue)}
         >
-          <Picker.Item label="Selecione um usuário" value={null} />
+          <Picker.Item label='Selecione um usuário' value={null} />
           {usuarios.map(usuario => (
-            <Picker.Item key={usuario.id} label={usuario.nome} value={usuario.uid} />
+            <Picker.Item
+              key={usuario.id}
+              label={usuario.nome}
+              value={usuario.uid}
+            />
           ))}
         </Picker>
 
-        <EntradaTexto  placeholder='Título' modelValue={setTituloChamado} texto='Título da tarefa' style={{
-          view: styles.areaReclamante,
-          text: styles.textoInfoChamado,
-          textInput:modalStyles.input
-        }}/>
-      
-          <EntradaTexto  placeholder='Reclamante' modelValue={setReclamanteChamado} texto='Usuario Reclamante' style={{
-           view: styles.areaReclamante,
-           text: styles.textoInfoChamado,
-           textInput:modalStyles.input
-        }}/>
-     <View style={styles.linha}>
-            <EntradaTexto  placeholder='Data de abertura do chamado' modelValue={setAberturaData} texto='dd/mm/aaaa' style={{
-            view: [styles.campoMetade, { marginRight: 5 }],
+        <EntradaTexto
+          placeholder='Título'
+          modelValue={setTituloChamado}
+          texto='Título da tarefa'
+          style={{
+            view: styles.areaReclamante,
             text: styles.textoInfoChamado,
-            textInput:modalStyles.input
-          }}/>                   
-            <EntradaTexto  placeholder='Tipo do chamado' modelValue={setTipoChamado} texto='Tarefa' style={{
-            view: [styles.campoMetade, { marginRight: 5 }],
+            textInput: modalStyles.input,
+          }}
+        />
+
+        <EntradaTexto
+          placeholder='Reclamante'
+          modelValue={setReclamanteChamado}
+          texto='Usuario Reclamante'
+          style={{
+            view: styles.areaReclamante,
             text: styles.textoInfoChamado,
-            textInput:modalStyles.input
-          }}/>       
+            textInput: modalStyles.input,
+          }}
+        />
+        <View style={styles.linha}>
+          <EntradaTexto
+            placeholder='Data de abertura do chamado'
+            modelValue={setAberturaData}
+            texto='dd/mm/aaaa'
+            style={{
+              view: [styles.campoMetade, { marginRight: 5 }],
+              text: styles.textoInfoChamado,
+              textInput: modalStyles.input,
+            }}
+          />
+          <EntradaTexto
+            placeholder='Tipo do chamado'
+            modelValue={setTipoChamado}
+            texto='Tarefa'
+            style={{
+              view: [styles.campoMetade, { marginRight: 5 }],
+              text: styles.textoInfoChamado,
+              textInput: modalStyles.input,
+            }}
+          />
         </View>
-         <EntradaTexto  placeholder='Descrição' modelValue={setDescricaoChamado} texto='Descrição' style={{
-           view: styles.areaDescricao,
-           text: styles.textoInfoChamado,
-           textInput:modalStyles.input
-        }}/>          
+        <EntradaTexto
+          placeholder='Descrição'
+          modelValue={setDescricaoChamado}
+          texto='Descrição'
+          style={{
+            view: styles.areaDescricao,
+            text: styles.textoInfoChamado,
+            textInput: modalStyles.input,
+          }}
+        />
       </View>
 
       <BotaoSubmit
         text='Criar nova tarefa'
         action={() => {
-          salvarChamado()
+          salvarChamado();
         }}
       />
       <BotaoSubmit
         text={'Sair'}
         action={() => {
-          sair()
+          sair();
         }}
       />
       <View style={styles.aviso}>
@@ -203,13 +228,13 @@ const styles = StyleSheet.create({
   areaReclamante: {
     margin: 10,
   },
-  
+
   linha: {
     flexDirection: 'row',
     margin: 10,
   },
   campoMetade: {
-    flex: 1, 
+    flex: 1,
   },
 
   input: {
@@ -220,10 +245,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F8FA',
     padding: 8,
   },
-  picker: {    
+  picker: {
     fontSize: scale(14),
-    margin: 10
-
+    margin: 10,
   },
   tipoChamado: {
     width: 150,
