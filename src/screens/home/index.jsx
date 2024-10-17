@@ -21,6 +21,8 @@ import RelatorioDeTarefaModal from '../../components/RelatorioDeTarefaModal';
 import { falseList } from '../../../assets/falseDb';
 import { useNavigation } from '@react-navigation/native';
 import AvisoDeErro from '../../components/AvisoDeErro';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useUserStore } from '../../store/userStore';
 
 const Home = props => {
   const navigation = useNavigation();
@@ -31,6 +33,10 @@ const Home = props => {
   ] = useState(false);
   const [modalRelatorio, setModalRelatorio] = useState(false);
   const [textoTituloModal, setTextoTituloModal] = useState('');
+
+  const { userAuth } = useUserStore();
+
+  console.log('USER FROM ZUSTAND: ', userAuth);
 
   return (
     <SafeAreaView style={styles.container}>

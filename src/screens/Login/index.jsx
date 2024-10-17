@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -12,6 +12,8 @@ import { scale } from '../../functions/scale';
 import { auth } from '../../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import ModalResetPass from '../../components/RecuperarSenha';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { hashAuth } from '../../config/HashAuth';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -19,6 +21,17 @@ const Login = ({ navigation }) => {
   const [checkInput, setCheckInput] = useState(false);
   const [resetPasseVisible, setResetPassVisible] = useState(false);
   const autenticar = () => {
+    if (checkInput) {
+      // const senhaEncriptada = criptografarSenha(senha);
+      const dataLogin = JSON.stringify({
+        email: email,
+        senha: senha,
+      });
+      AsyncStorage.setItem('loginData', dataLogin, error =>
+        console.log('Erro ao salvar dados: ', error),
+      );
+    }
+    console.log('Dados para autenticação: ', email, '\n', senha);
     signInWithEmailAndPassword(auth, email, senha)
       .then(userCredential => {
         const user = userCredential.user;
@@ -31,6 +44,39 @@ const Login = ({ navigation }) => {
         console.error('Erro', errorMessage);
       });
   };
+
+  const criptografarSenha = senha => {
+    return aes.encrypt(senha, hashAuth).toString();
+  };
+
+  // Função para desencriptar a senha
+  const desencriptarSenha = senhaCriptografada => {
+    const bytes = aes.decrypt(senhaCriptografada, hashAuth);
+    return bytes.toString(CryptoJS.enc.Utf8); // Retorna a senha original
+  };
+
+  const verifyUser = async () => {
+    const loginData = await AsyncStorage.getItem('loginData');
+    if (loginData) {
+      const loginInfos = JSON.parse(loginData);
+
+      signInWithEmailAndPassword(auth, loginInfos.email, loginInfos.senha)
+        .then(userCredential => {
+          const user = userCredential.user;
+          console.log('Usuário:', user);
+          navigation.navigate('Home');
+        })
+        .catch(error => {
+          const errorMessage = error.message;
+
+          console.error('Erro', errorMessage);
+        });
+    }
+  };
+
+  useEffect(() => {
+    verifyUser();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
