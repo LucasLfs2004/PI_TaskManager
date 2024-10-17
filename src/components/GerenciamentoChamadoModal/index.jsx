@@ -5,9 +5,10 @@ import {
   View,
   Text,
   TextInput,
-  Image,
-  Picker
+  ImageBackgroundBase,
+  Image
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
 import { modalStyles } from '../CommonStyles/Modal';

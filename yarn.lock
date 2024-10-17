@@ -2377,6 +2377,11 @@
   dependencies:
     plist "^3.1.0"
 
+"@react-native-picker/picker@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.8.1.tgz"
+  integrity sha512-iFhsKQzRh/z3GlmvJWSjJJ4333FdLE/PhXxlGlYllE7sFf+UTzziVY+ajatuJ+R5zDw2AxfJV4v/3tAzUJb0/A==
+
 "@react-native/assets-registry@0.74.87":
   version "0.74.87"
   resolved "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.74.87.tgz"
@@ -7395,6 +7400,7 @@ tar@^6.0.5, tar@^6.1.11:
     "@expo/metro-runtime" "~3.2.3"
     "@react-native-async-storage/async-storage" "^1.24.0"
     "@react-native-firebase/auth" "^21.0.0"
+    "@react-native-picker/picker" "^2.8.1"
     "@react-navigation/native" "^6.1.18"
     "@react-navigation/native-stack" "^6.11.0"
     expo "~51.0.35"
