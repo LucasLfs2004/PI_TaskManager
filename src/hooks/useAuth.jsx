@@ -3,8 +3,11 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useUserStore } from '../store/userStore';
 import { db } from '../config/firebase';
 import { collection, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const useAuth = () => {
+  const navigation = useNavigation();
   const { setUserAuth, setUserData } = useUserStore.getState();
   const autenticarUsuario = async (email, senha) => {
     try {
@@ -23,9 +26,6 @@ const useAuth = () => {
   };
 
   const usersCollection = collection(db, 'usuario');
-  //   const getUsuario = async () => {
-
-  //   };
 
   const getUserInDb = async uid => {
     console.log('uid do usuário: ', uid);
@@ -43,7 +43,18 @@ const useAuth = () => {
     }
   };
 
-  return { autenticarUsuario };
+  const signOutUser = async () => {
+    try {
+      const response = await auth.signOut();
+      console.log('Usuário deslogado: ', response);
+      await AsyncStorage.removeItem('loginData');
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log('Erro ao deslogar usuário: ', error);
+    }
+  };
+
+  return { autenticarUsuario, signOutUser };
 };
 
 export default useAuth;

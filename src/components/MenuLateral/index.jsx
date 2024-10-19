@@ -15,33 +15,14 @@ import { Logout } from '../../../assets/svg';
 import { auth } from '../../config/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useUserStore } from '../../store/userStore';
+import useAuth from '../../hooks/useAuth';
 
 const MenuLateral = props => {
   const navigation = useNavigation();
 
   const { userData, userAuth } = useUserStore();
 
-  //   const handleNavigateLogout = () => {
-  //     dispatch(
-  //       logout(() => {
-  //         navigation.dispatch(
-  //           CommonActions.reset({
-  //             index: 0,
-  //             routes: [
-  //               {
-  //                 name: 'AreaDeslogada',
-  //                 state: {
-  //                   routes: [
-  //                     { name: 'SelectLogin' }, // Certifique-se que SelectLogin é uma tela no stack correto
-  //                   ],
-  //                 },
-  //               },
-  //             ],
-  //           }),
-  //         );
-  //       }),
-  //     );
-  //   };
+  const { signOutUser } = useAuth();
 
   return (
     <View style={styles.ConteinerMenu}>
@@ -74,7 +55,7 @@ const MenuLateral = props => {
       </>
 
       <View style={styles.LineDivisor}>
-        <TouchableOpacity style={styles.ItemMenu}>
+        <TouchableOpacity style={styles.ItemMenu} onPress={() => signOutUser()}>
           <View style={styles.icon}>
             <Image
               source={require('../../../assets/logout.png')}

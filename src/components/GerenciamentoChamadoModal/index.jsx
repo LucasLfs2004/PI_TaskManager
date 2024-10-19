@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Modal, View, Text, TextInput, Image } from 'react-native';
+import {
+  StyleSheet,
+  Modal,
+  View,
+  Text,
+  TextInput,
+  Image,
+  ScrollView,
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -101,111 +109,113 @@ export default function GerenciamentoChamadoModal(props) {
       style={modalStyles.container}
       animationType='slide'
     >
-      <Header />
-      <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem} />
-      <LinearGradient
-        style={styles.areaTextoPrincipal}
-        colors={['#8D9CD3', '#FFF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0.45, y: 0 }}
-      >
-        <Text style={styles.textoPrincipal}>{props.titulo}</Text>
-      </LinearGradient>
-      <View style={styles.formularioTarefa}>
-        <Text style={[styles.textoInfoChamado, { marginLeft: 10 }]}>
-          Responsável:
-        </Text>
-        <Picker
-          selectedValue={uidResponsavel}
-          style={[styles.picker, styles.input]}
-          onValueChange={itemValue => setUidResponsavel(itemValue)}
+      <ScrollView style={{ flex: 1, paddingTop: scale(60) }}>
+        <Header />
+        <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem} />
+        <LinearGradient
+          style={styles.areaTextoPrincipal}
+          colors={['#8D9CD3', '#FFF']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0.45, y: 0 }}
         >
-          <Picker.Item label='Selecione um usuário' value={null} />
-          {usuarios.map(usuario => (
-            <Picker.Item
-              key={usuario.id}
-              label={usuario.nome}
-              value={usuario.uid}
-            />
-          ))}
-        </Picker>
+          <Text style={styles.textoPrincipal}>{props.titulo}</Text>
+        </LinearGradient>
+        <View style={styles.formularioTarefa}>
+          <Text style={[styles.textoInfoChamado, { marginLeft: 10 }]}>
+            Responsável:
+          </Text>
+          <Picker
+            selectedValue={uidResponsavel}
+            style={[styles.picker, styles.input]}
+            onValueChange={itemValue => setUidResponsavel(itemValue)}
+          >
+            <Picker.Item label='Selecione um usuário' value={null} />
+            {usuarios.map(usuario => (
+              <Picker.Item
+                key={usuario.id}
+                label={usuario.nome}
+                value={usuario.uid}
+              />
+            ))}
+          </Picker>
 
-        <EntradaTexto
-          placeholder='Título'
-          modelValue={setTituloChamado}
-          texto='Título da tarefa'
-          style={{
-            view: styles.areaReclamante,
-            text: styles.textoInfoChamado,
-            textInput: modalStyles.input,
-          }}
-        />
-
-        <EntradaTexto
-          placeholder='Reclamante'
-          modelValue={setReclamanteChamado}
-          texto='Usuario Reclamante'
-          style={{
-            view: styles.areaReclamante,
-            text: styles.textoInfoChamado,
-            textInput: modalStyles.input,
-          }}
-        />
-        <View style={styles.linha}>
           <EntradaTexto
-            placeholder='Data de abertura do chamado'
-            modelValue={setAberturaData}
-            texto='dd/mm/aaaa'
+            placeholder='Título'
+            modelValue={setTituloChamado}
+            texto='Título da tarefa'
             style={{
-              view: [styles.campoMetade, { marginRight: 5 }],
+              view: styles.areaReclamante,
               text: styles.textoInfoChamado,
               textInput: modalStyles.input,
             }}
           />
+
           <EntradaTexto
-            placeholder='Tipo do chamado'
-            modelValue={setTipoChamado}
-            texto='Tarefa'
+            placeholder='Reclamante'
+            modelValue={setReclamanteChamado}
+            texto='Usuario Reclamante'
             style={{
-              view: [styles.campoMetade, { marginRight: 5 }],
+              view: styles.areaReclamante,
+              text: styles.textoInfoChamado,
+              textInput: modalStyles.input,
+            }}
+          />
+          <View style={styles.linha}>
+            <EntradaTexto
+              placeholder='Data de abertura do chamado'
+              modelValue={setAberturaData}
+              texto='dd/mm/aaaa'
+              style={{
+                view: [styles.campoMetade, { marginRight: 5 }],
+                text: styles.textoInfoChamado,
+                textInput: modalStyles.input,
+              }}
+            />
+            <EntradaTexto
+              placeholder='Tipo do chamado'
+              modelValue={setTipoChamado}
+              texto='Tarefa'
+              style={{
+                view: [styles.campoMetade, { marginRight: 5 }],
+                text: styles.textoInfoChamado,
+                textInput: modalStyles.input,
+              }}
+            />
+          </View>
+          <EntradaTexto
+            placeholder='Descrição'
+            modelValue={setDescricaoChamado}
+            texto='Descrição'
+            style={{
+              view: styles.areaDescricao,
               text: styles.textoInfoChamado,
               textInput: modalStyles.input,
             }}
           />
         </View>
-        <EntradaTexto
-          placeholder='Descrição'
-          modelValue={setDescricaoChamado}
-          texto='Descrição'
-          style={{
-            view: styles.areaDescricao,
-            text: styles.textoInfoChamado,
-            textInput: modalStyles.input,
+
+        <BotaoSubmit
+          text='Criar nova tarefa'
+          action={() => {
+            salvarChamado();
           }}
         />
-      </View>
-
-      <BotaoSubmit
-        text='Criar nova tarefa'
-        action={() => {
-          salvarChamado();
-        }}
-      />
-      <BotaoSubmit
-        text={'Sair'}
-        action={() => {
-          sair();
-        }}
-      />
-      <View style={styles.aviso}>
-        <Image
-          source={require('../../../assets/aviso.png')}
-          style={{ width: scale(22), height: scale(22) }}
+        <BotaoSubmit
+          text={'Sair'}
+          action={() => {
+            sair();
+          }}
         />
-        <Text style={styles.textoInfoChamado}>
-          Confira todos os dados com cuidado.
-        </Text>
-      </View>
+        <View style={styles.aviso}>
+          <Image
+            source={require('../../../assets/aviso.png')}
+            style={{ width: scale(22), height: scale(22) }}
+          />
+          <Text style={styles.textoInfoChamado}>
+            Confira todos os dados com cuidado.
+          </Text>
+        </View>
+      </ScrollView>
     </Modal>
   );
 }
@@ -261,6 +271,7 @@ const styles = StyleSheet.create({
   },
   aviso: {
     marginTop: scale(22),
+    marginBottom: scale(120),
     rowGap: scale(8),
     alignItems: 'center',
   },

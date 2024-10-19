@@ -4,14 +4,28 @@ import { scale } from '../../functions/scale';
 import { useNavigation } from '@react-navigation/native';
 import { useUserStore } from '../../store/userStore';
 
-export default function Header({ removePaddingTop }) {
+export default function Header({ removePaddingTop, backButton = false }) {
   const { userData, userAuth } = useUserStore();
   const navigation = useNavigation();
   return (
     <View style={[styles.container, { paddingTop: 0 }]}>
-      <Text style={styles.nomeUsuario}>
-        {userAuth?.displayName ? userAuth.displayName : userData?.nome}
-      </Text>
+      {backButton && (
+        <TouchableOpacity
+          style={styles.btnBack}
+          onPress={() => navigation.goBack()}
+        >
+          <Image
+            style={styles.btnBackImg}
+            source={require('../../../assets/backIcon.png')}
+          />
+        </TouchableOpacity>
+      )}
+      <View>
+        <Text style={styles.nomeUsuario}>
+          {userAuth?.displayName ? userAuth.displayName : userData?.nome}
+        </Text>
+        <Text style={styles.cargo}>{userData?.tipo}</Text>
+      </View>
       <TouchableOpacity
         style={styles.areaIcone}
         onPress={() => navigation.openDrawer()}
@@ -34,17 +48,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: scale(70),
     // paddingTop: scale(60),
-    paddingHorizontal: scale(20),
+    paddingHorizontal: scale(16),
+  },
+  btnBack: {
+    width: scale(42),
+    height: scale(42),
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnBackImg: {
+    width: scale(24),
+    height: scale(24),
   },
 
   nomeUsuario: {
-    color: '#F5F8FA',
+    color: '#fff',
+    fontSize: scale(16),
+    fontWeight: '700',
   },
-  areaIcone: {
-    // flex: 1,
+  cargo: {
+    color: '#fff',
+    fontWeight: '500',
   },
+
   iconeUsuario: {
-    height: 42,
-    width: 42,
+    height: scale(42),
+    width: scale(42),
   },
 });

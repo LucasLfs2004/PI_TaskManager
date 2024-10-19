@@ -28,31 +28,45 @@ const Routes = () => {
       >
         <Drawer.Screen
           options={{ headerShown: false }}
-          name='SplashScreen'
-          component={LoadingScreen}
-        />
-        <Drawer.Screen
-          options={{ headerShown: false }}
-          name='Login'
-          component={Login}
-        />
-        <Drawer.Screen
-          options={{ headerShown: false }}
-          name='Home'
-          component={Home}
-        />
-        <Drawer.Screen
-          options={{ headerShown: false }}
-          name='Tasks'
-          component={ListTasks}
-        />
-        <Drawer.Screen
-          options={{ headerShown: false }}
-          name='Users'
-          component={ListUsers}
+          name='Stack'
+          component={StackNavigator}
         />
       </Drawer.Navigator>
     </NavigationContainer>
+  );
+};
+
+const StackNavigator = () => {
+  const Stack = createNativeStackNavigator();
+
+  return (
+    <Stack.Navigator initialRouteName='SplashScreen'>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='SplashScreen'
+        component={LoadingScreen}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='Login'
+        component={Login}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='Home'
+        component={Home}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='Tasks'
+        component={ListTasks}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='Users'
+        component={ListUsers}
+      />
+    </Stack.Navigator>
   );
 };
 
