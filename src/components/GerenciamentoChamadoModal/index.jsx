@@ -109,7 +109,7 @@ export default function GerenciamentoChamadoModal(props) {
       style={modalStyles.container}
       animationType='slide'
     >
-      <ScrollView style={{ flex: 1, paddingTop: scale(60) }}>
+      <ScrollView style={{ flex: 1, /*paddingTop: scale(60)*/ }}>
         <Header />
         <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem} />
         <LinearGradient
