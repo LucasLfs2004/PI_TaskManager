@@ -6,8 +6,8 @@ import { scale } from '../../functions/scale';
 
 const ListTasks = () => {
   return (
-    <SafeAreaView style={{marginTop: 25}}>
-      <Header removePaddingTop={true} />
+    <SafeAreaView style={{ marginTop: 25 }}>
+      <Header removePaddingTop={true} backButton={true} />
       <ScrollView style={{ marginBottom: scale(120) }}>
         {falseList.map((item, key) => (
           <TaskCard task={item} key={key} />

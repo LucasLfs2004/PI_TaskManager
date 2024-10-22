@@ -1,10 +1,4 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, StyleSheet } from 'react-native';
 import { falseList } from '../../../assets/falseDb';
 import TaskCard from '../../components/TaskCard';
 import Header from '../../components/Header';
@@ -17,7 +11,10 @@ import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModa
 
 const ListUsers = () => {
   const [usuario, setUsuario] = useState();
-  const [modalGerenciamentoUsuarioVisible, setModalGerenciamentoUsuarioVisible] = useState(false)
+  const [
+    modalGerenciamentoUsuarioVisible,
+    setModalGerenciamentoUsuarioVisible,
+  ] = useState(false);
 
   const usersCollection = collection(db, 'usuario');
   const getUsuario = async () => {
@@ -42,37 +39,50 @@ const ListUsers = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header removePaddingTop={true} />
+      <Header removePaddingTop={true} backButton={true} />
       <ScrollView style={{ marginBottom: scale(120) }}>
-        <TouchableOpacity style={styles.btnCadastro} onPress={() => {setModalGerenciamentoUsuarioVisible(true)}}>
+        <TouchableOpacity
+          style={styles.btnCadastro}
+          onPress={() => {
+            setModalGerenciamentoUsuarioVisible(true);
+          }}
+        >
           <Text style={styles.textBtn}>Cadastrar usuário</Text>
         </TouchableOpacity>
-        {
-        usuario && usuario.length === 0 ? (<Text style={styles.noUsersText}>Nenhum usuário cadastrado.</Text>) : 
-        (usuario?.map((item, key) => (
-            <View key={key} style={styles.userCard}>
-              <Text style={styles.name}>{item?.user?.nome} - {item?.user?.tipo}
-              </Text>
-              <Text style={styles.text}>{item?.user?.email}</Text>
-              <Text style={styles.text}>CPF: {item?.user?.cpf}</Text>
-              {/* <Text>{item?.user?.tipo}</Text> */}
-              <Text style={styles.text}>
-                {item?.user?.isAdmin
-                  ? 'Acessos de admin'
-                  : 'Sem acessos de admin'}
-              </Text>
-              <View style={styles.btnArea}>
-                <TouchableOpacity style={styles.btnCadastro}>
-                  <Text style={styles.textBtn}>Ver tarefas</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.btnCadastro, { backgroundColor: '#ff0000dd' }]}
-                >
-                  <Text style={styles.textBtn}>Excluir usuário</Text>
-                </TouchableOpacity>
+        {usuario && usuario.length === 0 ? (
+          <Text style={styles.noUsersText}>Nenhum usuário cadastrado.</Text>
+        ) : (
+          usuario?.map((item, key) => {
+            console.log('usuário de indice ', key, ': ', item);
+            return (
+              <View key={key} style={styles.userCard}>
+                <Text style={styles.name}>
+                  {item?.user?.nome} - {item?.user?.tipo}
+                </Text>
+                <Text style={styles.text}>{item?.user?.email}</Text>
+                <Text style={styles.text}>CPF: {item?.user?.cpf}</Text>
+                {/* <Text>{item?.user?.tipo}</Text> */}
+                <Text style={styles.text}>
+                  {item?.user?.isAdmin
+                    ? 'Acessos de admin'
+                    : 'Sem acessos de admin'}
+                </Text>
+                <View style={styles.btnArea}>
+                  <TouchableOpacity style={styles.btnCadastro}>
+                    <Text style={styles.textBtn}>Ver tarefas</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.btnCadastro,
+                      { backgroundColor: '#ff0000dd' },
+                    ]}
+                  >
+                    <Text style={styles.textBtn}>Excluir usuário</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          ))
+            );
+          })
         )}
       </ScrollView>
       <GerenciamentoUsuarioModal
@@ -88,7 +98,7 @@ const ListUsers = () => {
 export default ListUsers;
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     marginTop: 25,
   },
   userCard: {
