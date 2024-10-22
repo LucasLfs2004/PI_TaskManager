@@ -25,19 +25,16 @@ const useAuth = () => {
     }
   };
 
-  const usersCollection = collection(db, 'usuario');
-
   const getUserInDb = async uid => {
-    console.log('uid do usuário: ', uid);
+    const usersCollection = collection(db, 'usuario');
     try {
       let user = null;
-      const q = query(usersCollection, where('uid', '==', uid));
+      const q = query(usersCollection, where('user.uid', '==', uid));
       const collection = await getDocs(q);
       collection.forEach(element => {
-        console.log(element.data());
         user = element.data();
       });
-      setUserData(user);
+      setUserData(user.user);
     } catch (error) {
       console.log('Erro em buscar usuário no banco de dados: ', error.message);
     }

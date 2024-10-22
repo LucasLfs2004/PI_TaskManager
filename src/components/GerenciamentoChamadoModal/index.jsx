@@ -56,7 +56,6 @@ export default function GerenciamentoChamadoModal(props) {
     const removerListenerAutenticacao = onAuthStateChanged(auth, user => {
       if (user) {
         setUidRequerente(user.uid);
-        console.log('antes');
         buscarUsuarios();
       } else {
         setUidRequerente(null);

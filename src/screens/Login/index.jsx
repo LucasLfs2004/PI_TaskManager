@@ -112,7 +112,9 @@ const Login = ({ navigation }) => {
                 styles.checkbox,
                 { backgroundColor: checkInput ? '#115D8C' : '#fff' },
               ]}
-            ></TouchableOpacity>
+            >
+              <Image source={require('../../../assets/checkIcon.png')} />
+            </TouchableOpacity>
             <Text style={styles.text}>Lembrar-me</Text>
           </View>
           <Text onPress={() => setResetPassVisible(true)} style={styles.text}>

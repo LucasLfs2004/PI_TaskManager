@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, Modal, View, Text, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  Modal,
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import { MaskedTextInput } from 'react-native-mask-text';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../Header';
 import { modalStyles } from '../CommonStyles/Modal';
@@ -9,6 +19,7 @@ import { auth, db } from '../../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
+import { scale, width } from '../../functions/scale';
 
 export default function GerenciamentoUsuarioModal(props) {
   const [nome, setNome] = useState(null);
@@ -44,9 +55,11 @@ export default function GerenciamentoUsuarioModal(props) {
     };
     const camposEstaoPreenchidos = Object.values(usuario).every(value => value);
 
-    if (!camposEstaoPreenchidos) {
+    if (!camposEstaoPreenchidos && cpf?.length < 14) {
       setAvisoErroVisivel(true);
-      setAvisoErroMensagem('Todos os campos devem ser preenchidos');
+      setAvisoErroMensagem(
+        'Todos os campos devem ser preenchidos e o cpf deve ser válido',
+      );
       return;
     }
     criarUsuario(usuario.email, usuario.senha)
@@ -108,95 +121,122 @@ export default function GerenciamentoUsuarioModal(props) {
         });
     }
   };
+
+  console.log(cpf?.length);
   return (
     <Modal
       visible={props.visivel}
       style={modalStyles.container}
       animationType='slide'
     >
-      <Header />
-      <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem} />
-      <LinearGradient
-        style={styles.areaTextoPrincipal}
-        colors={['#8D9CD3', '#FFF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0.45, y: 0 }}
-      >
-        <Text style={styles.textoPrincipal}>{props.titulo}</Text>
-      </LinearGradient>
+      <View style={styles.container}>
+        <Header />
+        <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem} />
+        <LinearGradient
+          style={styles.areaTextoPrincipal}
+          colors={['#8D9CD3', '#FFF']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0.45, y: 0 }}
+        >
+          <Text style={styles.textoPrincipal}>{props.titulo}</Text>
+        </LinearGradient>
 
-      <View style={styles.formularioTarefa}>
-        <EntradaTexto
-          placeholder='Nome do usuario'
-          modelValue={setNome}
-          texto='Nome do Usuário'
-          style={{
-            view: styles.areaReclamante,
-            text: styles.textoInfoUsuario,
-            textInput: modalStyles.input,
-          }}
-        />
-        <View style={styles.linha}>
+        <View style={styles.formularioTarefa}>
           <EntradaTexto
-            placeholder='N° do CPF'
-            modelValue={setCpf}
-            texto='000.000.000-00'
+            placeholder='Nome do usuario'
+            modelValue={setNome}
+            texto='Nome do Usuário'
             style={{
-              view: [styles.campoMetade, { marginRight: 5 }],
+              view: styles.areaReclamante,
               text: styles.textoInfoUsuario,
-              textInput: [modalStyles.input, modalStyles.inputCPF],
+              textInput: modalStyles.input,
+            }}
+          />
+          <View style={styles.linha}>
+            <View style={[{ width: scale(180) }]}>
+              <Text style={styles.textoInfoUsuario}>N° do CPF</Text>
+
+              <MaskedTextInput
+                placeholder={'N° do CPF'}
+                mask='999.999.999-99'
+                onChangeText={(text, rawText) => {
+                  console.log(text);
+                  console.log(rawText);
+                  setCpf(text);
+                }}
+                style={[modalStyles.input, modalStyles.inputCPF]}
+              />
+            </View>
+            <EntradaTexto
+              placeholder='Tipo do Usuário'
+              modelValue={setTipoUsuario}
+              texto='Tipo'
+              style={{
+                view: [styles.campoMetade, { marginRight: 5 }],
+                text: styles.textoInfoUsuario,
+                textInput: [modalStyles.input],
+              }}
+            />
+          </View>
+          <View style={styles.linha}>
+            <TouchableOpacity
+              onPress={() => setIsAdmin(!isAdmin)}
+              style={[styles.checkbox, { backgroundColor: '#115D8C' }]}
+            >
+              {isAdmin && (
+                <Image
+                  style={{ width: scale(16), height: scale(16) }}
+                  source={require('../../../assets/checkIcon.png')}
+                />
+              )}
+            </TouchableOpacity>
+            <Text style={styles.text}>Permissões avançadas</Text>
+          </View>
+          <EntradaTexto
+            placeholder='E-mail do usuário'
+            modelValue={setEmailUsuario}
+            texto='email@email.com'
+            style={{
+              view: styles.areaEmail,
+              text: styles.textoInfoUsuario,
+              textInput: modalStyles.input,
             }}
           />
           <EntradaTexto
-            placeholder='Tipo do Usuário'
-            modelValue={setTipoUsuario}
-            texto='Tipo'
+            placeholder='Senha'
+            modelValue={setSenha}
+            texto='***********'
             style={{
-              view: [styles.campoMetade, { marginRight: 5 }],
+              view: styles.areaSenha,
               text: styles.textoInfoUsuario,
-              textInput: [modalStyles.input],
+              textInput: modalStyles.input,
             }}
+            secureTextEntry={true}
           />
         </View>
-        <EntradaTexto
-          placeholder='E-mail do usuário'
-          modelValue={setEmailUsuario}
-          texto='email@email.com'
-          style={{
-            view: styles.areaEmail,
-            text: styles.textoInfoUsuario,
-            textInput: modalStyles.input,
+        <BotaoSubmit
+          text={'Cadastrar novo usuário'}
+          action={() => {
+            salvarUsuario();
           }}
         />
-        <EntradaTexto
-          placeholder='Senha'
-          modelValue={setSenha}
-          texto='***********'
-          style={{
-            view: styles.areaSenha,
-            text: styles.textoInfoUsuario,
-            textInput: modalStyles.input,
+        <BotaoSubmit
+          text={'Sair'}
+          action={() => {
+            sair();
           }}
-          secureTextEntry={true}
         />
       </View>
-      <BotaoSubmit
-        text={'Cadastrar novo usuário'}
-        action={() => {
-          salvarUsuario();
-        }}
-      />
-      <BotaoSubmit
-        text={'Sair'}
-        action={() => {
-          sair();
-        }}
-      />
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#F5F8FA',
+    flex: 1,
+    marginTop: scale(60),
+  },
   areaTextoPrincipal: {
     marginTop: 20,
     marginBottom: 20,
@@ -222,6 +262,7 @@ const styles = StyleSheet.create({
   linha: {
     flexDirection: 'row',
     margin: 10,
+    columnGap: scale(20),
   },
   campoMetade: {
     flex: 1,
@@ -237,15 +278,22 @@ const styles = StyleSheet.create({
   inputCPF: {
     width: 180,
   },
-
   textoInfoUsuario: {
     color: '#617480',
-    fontSize: 10,
+    fontSize: scale(14),
   },
   areaEmail: {
     margin: 10,
   },
   areaSenha: {
     margin: 10,
+  },
+  checkbox: {
+    width: scale(20),
+    height: scale(20),
+    borderRadius: scale(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: scale(22),
   },
 });
