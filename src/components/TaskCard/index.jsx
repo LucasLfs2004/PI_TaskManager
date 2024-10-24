@@ -6,36 +6,30 @@ import moment from 'moment';
 const checkIfLate = dateString => {
   const inputDate = moment(dateString, 'DD/MM/YYYY');
 
-  // console.log(dateString);
-  // Obter a data atual
   const currentDate = moment();
-
-  // Verificar se a data de entrada é anterior à data atual
-  if (inputDate.isBefore(currentDate, 'day')) {
-    return true;
-  } else {
-    return false;
-  }
+  console.log(inputDate.isAfter(currentDate, 'day'), currentDate, inputDate);
+  return !inputDate.isAfter(currentDate, 'day');
 };
 const TaskCard = ({ task }) => {
-  const [delayed, setDelayed] = useState(checkIfLate(task.expire_at));
-  // console.log(delayed, task.expire_at);
+  const [delayed, setDelayed] = useState(checkIfLate(task.prazoData));
+  console.log(delayed, task.concluido);
+
+  console.log(task);
 
   return (
     <View style={styles.card}>
       <View style={styles.infos}>
         <View style={styles.column}>
-          <Text style={styles.title}>{task.title}</Text>
+          <Text style={styles.title}>{task.titulo}</Text>
           <View
             style={[
               styles.statusView,
               {
-                backgroundColor:
-                  task.status === 'Concluída'
-                    ? '#51B853'
-                    : !delayed
-                    ? '#F8B135'
-                    : '#f00',
+                backgroundColor: task.concluido
+                  ? '#51B853'
+                  : !delayed
+                  ? '#F8B135'
+                  : '#f00',
               },
             ]}
           >
@@ -45,21 +39,22 @@ const TaskCard = ({ task }) => {
                 fontWeight: '600',
               }}
             >
-              {delayed
-                ? task.status !== 'Concluída'
+              {!task?.concluido
+                ? delayed
                   ? 'Atrasada'
-                  : task.status
-                : task.status}
+                  : 'Em processo'
+                : 'Concluída'}
             </Text>
           </View>
         </View>
+        <Text style={styles.title}>{task.responsavel}</Text>
         <Text style={[styles.desc, { fontWeight: '600' }]}>
-          Prazo: {task.expire_at}
+          Prazo: {task.prazoData}
         </Text>
-        <Text style={styles.desc}>{task.description}</Text>
+        <Text style={styles.desc}>{task.descricao}</Text>
       </View>
       <View style={styles.btnArea}>
-        {task.status !== 'Concluída' && (
+        {!task?.concluido && (
           <TouchableOpacity style={styles.btn}>
             <Text style={styles.textBtn}>Concluir Tarefa</Text>
           </TouchableOpacity>

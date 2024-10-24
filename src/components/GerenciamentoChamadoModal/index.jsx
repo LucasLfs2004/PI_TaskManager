@@ -10,6 +10,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+import moment from 'moment';
 import { Picker } from '@react-native-picker/picker';
 import Header from '../Header';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,11 +23,15 @@ import { db } from '../../config/firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import InputDate from '../inputDate';
+import { useUserStore } from '../../store/userStore';
 
 export default function GerenciamentoChamadoModal(props) {
+  const [nomeRequerente, setNomeRequerente] = useState();
   const [tituloChamado, setTituloChamado] = useState(null);
   const [reclamanteChamado, setReclamanteChamado] = useState(null);
-  const [aberturaData, setAberturaData] = useState(null);
+  const [prazoData, setPrazoData] = useState('');
+  const [dateInputValid, setDateInputValid] = useState(false);
   const [tipoChamado, setTipoChamado] = useState(null);
   const [descricaoChamado, setDescricaoChamado] = useState(null);
 
@@ -38,6 +43,21 @@ export default function GerenciamentoChamadoModal(props) {
 
   const [usuarios, setUsuarios] = useState([]);
   const [uidResponsavel, setUidResponsavel] = useState('');
+
+  useEffect(() => {
+    console.log(`Data: ${prazoData}\nData é valida: ${dateInputValid}`);
+  }, [prazoData]);
+
+  const { userAuth, userData } = useUserStore();
+
+  useEffect(() => {
+    console.log('userAuth', userAuth);
+    console.log('userData', userData);
+
+    setNomeRequerente(
+      userAuth?.displayName ? userAuth.displayName : userData?.nome,
+    );
+  }, [userAuth, userData]);
 
   useEffect(() => {
     const auth = getAuth(); // Inicializa o Firebase Auth
@@ -69,15 +89,20 @@ export default function GerenciamentoChamadoModal(props) {
   async function salvarChamado() {
     const chamado = {
       titulo: tituloChamado,
-      reclamante: reclamanteChamado,
-      aberturaData: aberturaData,
+      requerente: nomeRequerente,
+      responsavel: reclamanteChamado,
+      aberturaData: moment().format('DD/MM/YYYY HH:mm'),
+      prazoData: prazoData,
       tipo: tipoChamado,
       descricao: descricaoChamado,
       uidRequerente,
       uidResponsavel,
     };
 
-    if (Object.values(chamado).every(value => value !== null)) {
+    if (
+      Object.values(chamado).every(value => value !== null) &&
+      dateInputValid
+    ) {
       console.log(chamado);
       await addDoc(collection(db, 'tarefa'), { chamado }).catch(erro =>
         console.log(erro),
@@ -89,12 +114,14 @@ export default function GerenciamentoChamadoModal(props) {
       setAvisoErroMensagem('');
       setTituloChamado(null);
       setReclamanteChamado(null);
-      setAberturaData(null);
+      setPrazoData('');
       setTipoChamado(null);
       setDescricaoChamado(null);
     } else {
       setAvisoErroVisivel(true);
-      setAvisoErroMensagem('Todos os campos devem ser preenchidos');
+      setAvisoErroMensagem(
+        'Todos os campos devem ser preenchidos e o prazo deve ser uma data válida',
+      );
     }
   }
 
@@ -162,15 +189,20 @@ export default function GerenciamentoChamadoModal(props) {
             }}
           />
           <View style={styles.linha}>
-            <EntradaTexto
+            <InputDate
               placeholder='Prazo do chamado'
-              modelValue={setAberturaData}
+              value={prazoData}
+              modelValue={value => {
+                setPrazoData(value);
+                console.log('data value: ', value);
+              }}
               texto='dd/mm/aaaa'
               style={{
                 view: [styles.campoMetade, { marginRight: 5 }],
                 text: styles.textoInfoChamado,
                 textInput: modalStyles.input,
               }}
+              setDateValid={value => setDateInputValid(value)}
             />
             <EntradaTexto
               placeholder='Tipo do chamado'
@@ -183,7 +215,21 @@ export default function GerenciamentoChamadoModal(props) {
               }}
             />
           </View>
-          <EntradaTexto
+
+          <View style={styles.areaDescricao}>
+            <Text style={styles.textoInfoChamado}>Descrição</Text>
+            <TextInput
+              placeholder='Descrição'
+              onChangeText={setDescricaoChamado}
+              multiline={true}
+              style={[styles.input, styles.textArea]}
+              // placeholderTextColor={emFoco ? '#B0BEC5' : '#D3D3D3'}
+              // onFocus={() => estaEmFoco(true)}
+              // onBlur={() => estaEmFoco(false)}
+              secureTextEntry={false}
+            />
+          </View>
+          {/* <EntradaTexto
             placeholder='Descrição'
             modelValue={setDescricaoChamado}
             texto='Descrição'
@@ -192,7 +238,7 @@ export default function GerenciamentoChamadoModal(props) {
               text: styles.textoInfoChamado,
               textInput: modalStyles.input,
             }}
-          />
+          /> */}
         </View>
 
         <BotaoSubmit
@@ -255,6 +301,9 @@ const styles = StyleSheet.create({
     borderColor: '#DCE2E5',
     backgroundColor: '#F5F8FA',
     padding: 8,
+  },
+  textArea: {
+    minHeight: scale(60),
   },
   picker: {
     fontSize: scale(14),
