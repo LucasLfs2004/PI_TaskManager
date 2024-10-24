@@ -1,27 +1,13 @@
-import {
-  Button,
-  Modal,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  StatusBar,
-  View,
-  ScrollView,
-} from 'react-native';
-import { scale } from '../../functions/scale';
+import { SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
 import TaskCard from '../../components/TaskCard';
 import Header from '../../components/Header';
 import BotaoGerenciamento from '../../components/BotaoGerenciamento';
-import BotaoChamado from '../../components/BotaoChamado';
 import { useState } from 'react';
 import GerenciamentoChamadoModal from '../../components/GerenciamentoChamadoModal';
 import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
 import RelatorioDeTarefaModal from '../../components/RelatorioDeTarefaModal';
 import { falseList } from '../../../assets/falseDb';
 import { useNavigation } from '@react-navigation/native';
-import AvisoDeErro from '../../components/AvisoDeErro';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUserStore } from '../../store/userStore';
 
 const Home = props => {

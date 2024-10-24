@@ -8,6 +8,7 @@ import {
   ImageBackgroundBase,
   Image,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Header from '../Header';
@@ -103,13 +104,19 @@ export default function GerenciamentoChamadoModal(props) {
     setAvisoErroVisivel(false);
   }
 
+  useEffect(() => {
+    console.log(reclamanteChamado);
+  }, [reclamanteChamado]);
+
   return (
     <Modal
       visible={props.visivel}
       style={modalStyles.container}
       animationType='slide'
     >
-      <ScrollView style={{ flex: 1, /*paddingTop: scale(60)*/ }}>
+      <ScrollView
+        style={{ flex: 1, paddingTop: scale(Platform.OS === 'ios' ? 60 : 0) }}
+      >
         <Header />
         <AvisoDeErro visivel={avisoErroVisivel} mensagem={avisoErroMensagem} />
         <LinearGradient
@@ -127,7 +134,12 @@ export default function GerenciamentoChamadoModal(props) {
           <Picker
             selectedValue={uidResponsavel}
             style={[styles.picker, styles.input]}
-            onValueChange={itemValue => setUidResponsavel(itemValue)}
+            onValueChange={itemValue => {
+              setUidResponsavel(itemValue);
+              setReclamanteChamado(
+                usuarios.find(objeto => objeto.uid === itemValue).nome,
+              );
+            }}
           >
             <Picker.Item label='Selecione um usuário' value={null} />
             {usuarios.map(usuario => (
@@ -149,20 +161,9 @@ export default function GerenciamentoChamadoModal(props) {
               textInput: modalStyles.input,
             }}
           />
-
-          <EntradaTexto
-            placeholder='Reclamante'
-            modelValue={setReclamanteChamado}
-            texto='Usuario Reclamante'
-            style={{
-              view: styles.areaReclamante,
-              text: styles.textoInfoChamado,
-              textInput: modalStyles.input,
-            }}
-          />
           <View style={styles.linha}>
             <EntradaTexto
-              placeholder='Data de abertura do chamado'
+              placeholder='Prazo do chamado'
               modelValue={setAberturaData}
               texto='dd/mm/aaaa'
               style={{

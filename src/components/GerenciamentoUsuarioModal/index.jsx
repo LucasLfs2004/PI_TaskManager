@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   Image,
+  Platform,
   TouchableOpacity,
 } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
@@ -235,7 +236,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5F8FA',
     flex: 1,
-    marginTop: scale(60),
+
+    marginTop: scale(Platform.OS === 'ios' ? 60 : 0),
   },
   areaTextoPrincipal: {
     marginTop: 20,
