@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import MenuLateral from '../components/MenuLateral';
+import TarefaScreen from '../screens/Tarefa';
 
 const Routes = () => {
   const Stack = createNativeStackNavigator();
@@ -65,6 +66,11 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
         name='Users'
         component={ListUsers}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='Task'
+        component={TarefaScreen}
       />
     </Stack.Navigator>
   );

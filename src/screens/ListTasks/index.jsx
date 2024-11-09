@@ -27,7 +27,7 @@ const ListTasks = () => {
   return (
     <SafeAreaView style={{ marginTop: 25 }}>
       <Header removePaddingTop={true} backButton={true} />
-      <ScrollView style={{ marginBottom: scale(120) }}>
+      <ScrollView style={{ marginBottom: scale(48) }}>
         {tasks?.map((item, key) => (
           <TaskCard task={item} key={key} />
         ))}

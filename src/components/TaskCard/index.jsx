@@ -2,6 +2,7 @@ import { scale } from '../../functions/scale';
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
+import { useNavigation } from '@react-navigation/native';
 
 const checkIfLate = dateString => {
   const inputDate = moment(dateString, 'DD/MM/YYYY');
@@ -11,6 +12,7 @@ const checkIfLate = dateString => {
   return !inputDate.isAfter(currentDate, 'day');
 };
 const TaskCard = ({ task }) => {
+  const navigation = useNavigation();
   const [delayed, setDelayed] = useState(checkIfLate(task.prazoData));
   console.log(delayed, task.concluido);
 
@@ -60,6 +62,7 @@ const TaskCard = ({ task }) => {
           </TouchableOpacity>
         )}
         <TouchableOpacity
+          onPress={() => navigation.navigate('Task', { task: task })}
           style={[styles.btn, { backgroundColor: '#115D8Cdd' }]}
         >
           <Text style={styles.textBtn}>Abrir</Text>

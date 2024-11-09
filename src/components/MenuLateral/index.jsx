@@ -1,19 +1,8 @@
 import React from 'react';
-import {
-  Image,
-  Linking,
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-} from 'react-native';
-import { CommonActions } from '@react-navigation/native';
+import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { scale } from '../../functions/scale';
 import { useNavigation } from '@react-navigation/native';
 
-import { Logout } from '../../../assets/svg';
-import { auth } from '../../config/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useUserStore } from '../../store/userStore';
 import useAuth from '../../hooks/useAuth';
 
@@ -65,136 +54,6 @@ const MenuLateral = props => {
           <Text style={styles.ItemMenuColor}>Sair</Text>
         </TouchableOpacity>
       </View>
-
-      {/* <View style={styles.LineDivisor}> */}
-      {/* <TouchableOpacity
-          onPress={() => {
-            props.tabUserActive(0);
-            navigation.navigate('PerfilUser');
-          }}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <User color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Perfil</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            props.setTabActive(0);
-            navigation.navigate('ConfiguracoesScreen');
-          }}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Setings color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Configurações</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            props.tabUserActive(3);
-            navigation.navigate('PerfilUser');
-            // Actions.perfilUser();
-          }}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Galery color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Minhas Listas</Text>
-        </TouchableOpacity> */}
-      {/* <TouchableOpacity style={styles.ItemMenu}>
-          <View style={styles.icon}>
-            <Logout color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Sair</Text>
-        </TouchableOpacity>
-      </View> */}
-      {/* <View style={styles.LineDivisor}>
-        <TouchableOpacity
-          onPress={() => {
-            props.tabUserActive(0);
-            navigation.navigate('PerfilUser');
-          }}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <User color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Perfil</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            props.setTabActive(0);
-            navigation.navigate('ConfiguracoesScreen');
-          }}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Setings color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Configurações</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            props.tabUserActive(3);
-            navigation.navigate('PerfilUser');
-            // Actions.perfilUser();
-          }}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Galery color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Minhas Listas</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleNavigateLogout}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Logout color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Sair</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.LineDivisor}>
-        <TouchableOpacity
-          onPress={() => {
-            props.setTabBar(false);
-            navigation.navigate('AreaDeslogada', { Screen: 'SelectLogin' });
-          }}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Logout color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Entrar</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.LineDivisor}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Termos')}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Termos color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Política de Privacidade</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Doubts')}
-          style={styles.ItemMenu}
-        >
-          <View style={styles.icon}>
-            <Questions color={styles.ItemMenuColor.color} />
-          </View>
-          <Text style={styles.ItemMenuColor}>Dúvidas</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 };

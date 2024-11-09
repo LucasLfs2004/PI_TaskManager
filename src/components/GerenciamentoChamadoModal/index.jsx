@@ -25,6 +25,7 @@ import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import InputDate from '../inputDate';
 import { useUserStore } from '../../store/userStore';
+import { generateRandomId } from '../../functions/generateId';
 
 export default function GerenciamentoChamadoModal(props) {
   const [nomeRequerente, setNomeRequerente] = useState();
@@ -95,10 +96,12 @@ export default function GerenciamentoChamadoModal(props) {
       prazoData: prazoData,
       tipo: tipoChamado,
       descricao: descricaoChamado,
+      id: generateRandomId(),
       uidRequerente,
       uidResponsavel,
     };
 
+    console.log(chamado);
     if (
       Object.values(chamado).every(value => value !== null) &&
       dateInputValid

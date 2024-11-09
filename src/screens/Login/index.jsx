@@ -113,7 +113,10 @@ const Login = ({ navigation }) => {
                 { backgroundColor: checkInput ? '#115D8C' : '#fff' },
               ]}
             >
-              <Image source={require('../../../assets/checkIcon.png')} />
+              <Image
+                style={{ width: scale(12), height: scale(12) }}
+                source={require('../../../assets/checkIcon.png')}
+              />
             </TouchableOpacity>
             <Text style={styles.text}>Lembrar-me</Text>
           </View>
@@ -178,6 +181,8 @@ const styles = StyleSheet.create({
     height: scale(16),
     borderRadius: scale(3),
     borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderColor: '#DCE2E5',
   },
   rememberMe: {

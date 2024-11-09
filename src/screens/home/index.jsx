@@ -1,4 +1,10 @@
-import { SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import TaskCard from '../../components/TaskCard';
 import Header from '../../components/Header';
 import BotaoGerenciamento from '../../components/BotaoGerenciamento';
@@ -6,7 +12,7 @@ import { useEffect, useState } from 'react';
 import GerenciamentoChamadoModal from '../../components/GerenciamentoChamadoModal';
 import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
 import RelatorioDeTarefaModal from '../../components/RelatorioDeTarefaModal';
-import { falseList } from '../../../assets/falseDb';
+import { scale } from '../../functions/scale';
 import { useNavigation } from '@react-navigation/native';
 import { useUserStore } from '../../store/userStore';
 import useTask from '../../hooks/useTask';
@@ -22,7 +28,8 @@ const Home = props => {
   const [textoTituloModal, setTextoTituloModal] = useState('');
   const [tasks, setTasks] = useState(null);
 
-  const { userAuth } = useUserStore();
+  const { userAuth, userData } = useUserStore();
+  console.log('USER', userData);
 
   const { fetchTasks } = useTask();
 
@@ -47,50 +54,58 @@ const Home = props => {
       <Header removePaddingTop={true} />
       <ScrollView>
         <BotaoGerenciamento
-          texto='Criar novas tarefas'
-          abrir={() => {
-            setModalCriaTarefaVisible(true);
-            setTextoTituloModal('Criar nova tarefa');
-          }}
-        />
-        <BotaoGerenciamento
-          texto='Atribuir tarefas a usuário'
-          abrir={() => {
-            navigation.navigate('Tasks');
-            // setModalCriaTarefaVisible(true);
-            setTextoTituloModal('Atribuir tarefa');
-          }}
-        />
-        <BotaoGerenciamento
-          texto='Gerenciar tarefas em andamento'
+          texto='Visualizar tarefas em andamento'
           abrir={() => {
             navigation.navigate('Tasks');
             // setModalCriaTarefaVisible(true);
             setTextoTituloModal('Gerenciar tarefa');
           }}
         />
-        <BotaoGerenciamento
-          texto='Gerenciar Usuario'
-          abrir={() => {
-            navigation.navigate('Users');
-            // setModalGerenciamentoUsuarioVisible(true);
-            setTextoTituloModal('Gerenciar Usuario');
-          }}
-        />
-        <BotaoGerenciamento
-          texto='Criar e visualizar relatórios'
-          abrir={() => {
-            setModalRelatorio(true);
-            setTextoTituloModal('Relatório de Tarefas');
-          }}
-        />
-        {tasks?.length > 0 && (
-          <View>
+        {userData?.isAdmin && (
+          <>
+            <BotaoGerenciamento
+              texto='Criar novas tarefas'
+              abrir={() => {
+                setModalCriaTarefaVisible(true);
+                setTextoTituloModal('Criar nova tarefa');
+              }}
+            />
+
+            <BotaoGerenciamento
+              texto='Gerenciar Usuario'
+              abrir={() => {
+                navigation.navigate('Users');
+                // setModalGerenciamentoUsuarioVisible(true);
+                setTextoTituloModal('Gerenciar Usuario');
+              }}
+            />
+            <BotaoGerenciamento
+              texto='Criar e visualizar relatórios'
+              abrir={() => {
+                setModalRelatorio(true);
+                setTextoTituloModal('Relatório de Tarefas');
+              }}
+            />
+          </>
+        )}
+        {tasks?.length > 0 ? (
+          <View style={{ marginBottom: scale(64) }}>
             {tasks.map((item, key) => {
               if (key < 5) {
                 return <TaskCard task={item} />;
               }
             })}
+          </View>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              height: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <ActivityIndicator color={'#12486A'} />
           </View>
         )}
       </ScrollView>
