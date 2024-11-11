@@ -45,6 +45,8 @@ const useAuth = () => {
       const response = await auth.signOut();
       console.log('Usuário deslogado: ', response);
       await AsyncStorage.removeItem('loginData');
+      setUserAuth(null);
+      setUserData(null);
       navigation.navigate('Login');
     } catch (error) {
       console.log('Erro ao deslogar usuário: ', error);
