@@ -14,13 +14,15 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import ModalResetPass from '../../components/RecuperarSenha';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { hashAuth } from '../../config/HashAuth';
+import useAuth from '../../hooks/useAuth';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [checkInput, setCheckInput] = useState(false);
   const [resetPasseVisible, setResetPassVisible] = useState(false);
-  const autenticar = () => {
+  const { autenticarUsuario } = useAuth();
+  const autenticar = async () => {
     if (checkInput) {
       // const senhaEncriptada = criptografarSenha(senha);
       const dataLogin = JSON.stringify({
@@ -31,18 +33,23 @@ const Login = ({ navigation }) => {
         console.log('Erro ao salvar dados: ', error),
       );
     }
-    console.log('Dados para autenticação: ', email, '\n', senha);
-    signInWithEmailAndPassword(auth, email, senha)
-      .then(userCredential => {
-        const user = userCredential.user;
-        console.log('Usuário:', user);
-        navigation.navigate('Home');
-      })
-      .catch(error => {
-        const errorMessage = error.message;
+    try {
+      const response = await autenticarUsuario(email, senha);
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error(error);
+    }
+    // console.log('Dados para autenticação: ', email, '\n', senha);
+    // signInWithEmailAndPassword(auth, email, senha)
+    //   .then(userCredential => {
+    //     const user = userCredential.user;
+    //     console.log('Usuário:', user);
+    //   })
+    //   .catch(error => {
+    //     const errorMessage = error.message;
 
-        console.error('Erro', errorMessage);
-      });
+    //     console.error('Erro', errorMessage);
+    //   });
   };
 
   const criptografarSenha = senha => {
@@ -56,21 +63,20 @@ const Login = ({ navigation }) => {
   };
 
   const verifyUser = async () => {
-    const loginData = await AsyncStorage.getItem('loginData');
-    if (loginData) {
-      const loginInfos = JSON.parse(loginData);
-
-      signInWithEmailAndPassword(auth, loginInfos.email, loginInfos.senha)
-        .then(userCredential => {
-          const user = userCredential.user;
-          console.log('Usuário:', user);
+    try {
+      const loginData = await AsyncStorage.getItem('loginData');
+      if (loginData) {
+        const loginInfos = JSON.parse(loginData);
+        const response = await autenticarUsuario(
+          loginInfos.email,
+          loginInfos.senha,
+        );
+        if (response) {
           navigation.navigate('Home');
-        })
-        .catch(error => {
-          const errorMessage = error.message;
-
-          console.error('Erro', errorMessage);
-        });
+        }
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

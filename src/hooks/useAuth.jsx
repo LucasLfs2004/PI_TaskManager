@@ -21,7 +21,7 @@ const useAuth = () => {
       return userCredential.user;
     } catch (error) {
       console.log('Erro na autenticação do usuário: ', error.message);
-      return error;
+      throw error;
     }
   };
 
