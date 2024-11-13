@@ -1,24 +1,26 @@
+import { useNavigation } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   View,
-  ScrollView,
-  ActivityIndicator,
 } from 'react-native';
-import TaskCard from '../../components/TaskCard';
-import Header from '../../components/Header';
 import BotaoGerenciamento from '../../components/BotaoGerenciamento';
-import { useEffect, useState } from 'react';
 import GerenciamentoChamadoModal from '../../components/GerenciamentoChamadoModal';
 import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
+import Header from '../../components/Header';
 import RelatorioDeTarefaModal from '../../components/RelatorioDeTarefaModal';
+import TaskCard from '../../components/TaskCard';
 import { scale } from '../../functions/scale';
-import { useNavigation } from '@react-navigation/native';
-import { useUserStore } from '../../store/userStore';
 import useTask from '../../hooks/useTask';
+import { useUserStore } from '../../store/userStore';
+import { useTaskStore } from '../../store/useTask';
 
 const Home = props => {
   const navigation = useNavigation();
+  useTask();
   const [modalCriaTarefaVisible, setModalCriaTarefaVisible] = useState(false);
   const [
     modalGerenciamentoUsuarioVisible,
@@ -26,28 +28,14 @@ const Home = props => {
   ] = useState(false);
   const [modalRelatorio, setModalRelatorio] = useState(false);
   const [textoTituloModal, setTextoTituloModal] = useState('');
-  const [tasks, setTasks] = useState(null);
 
-  const { userAuth, userData } = useUserStore();
-  console.log('USER', userData);
+  const { userData } = useUserStore();
 
-  const { fetchTasks } = useTask();
-
-  const getTasks = async () => {
-    const tasksFirestore = await fetchTasks(userAuth.uid);
-    console.log('tasks from firestore: ', tasksFirestore);
-    setTasks(tasksFirestore);
-  };
+  const { tasksGeral: tasks } = useTaskStore();
 
   useEffect(() => {
-    getTasks();
-  }, [
-    modalCriaTarefaVisible,
-    modalRelatorio,
-    modalGerenciamentoUsuarioVisible,
-  ]);
-
-  console.log('USER FROM ZUSTAND: ', userAuth);
+    console.log('Atualização de tasks na home: ', tasks);
+  }, [tasks]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,7 +63,6 @@ const Home = props => {
               texto='Gerenciar Usuario'
               abrir={() => {
                 navigation.navigate('Users');
-                // setModalGerenciamentoUsuarioVisible(true);
                 setTextoTituloModal('Gerenciar Usuario');
               }}
             />
@@ -92,7 +79,7 @@ const Home = props => {
           <View style={{ marginBottom: scale(64) }}>
             {tasks.map((item, key) => {
               if (key < 5) {
-                return <TaskCard task={item} />;
+                return <TaskCard task={item} key={key} />;
               }
             })}
           </View>
@@ -100,7 +87,7 @@ const Home = props => {
           <View
             style={{
               flex: 1,
-              height: '100%',
+              height: scale(700),
               alignItems: 'center',
               justifyContent: 'center',
             }}

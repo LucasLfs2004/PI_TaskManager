@@ -1,53 +1,135 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 
-import { auth } from '../config/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useUserStore } from '../store/userStore';
-import { db } from '../config/firebase';
 import {
   collection,
-  getDoc,
   getDocs,
   or,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { db } from '../config/firebase';
+import { useUserStore } from '../store/userStore';
+import { useTaskStore } from '../store/useTask';
 
 const useTask = () => {
-  const [tasks, setTasks] = useState();
+  const { setTasksGeral, tasksGeral } = useTaskStore();
+  const { userAuth } = useUserStore();
 
-  const fetchTasks = async uid => {
-    console.log(uid);
+  const fetchTasks = async (userUid = userAuth?.uid) => {
     try {
       console.log('Iniciando fetchTasks');
       const tasksCollection = collection(db, 'tarefa');
       const q = query(
         tasksCollection,
         or(
-          where('chamado.uidRequerente', '==', uid),
-          where('chamado.uidResponsavel', '==', uid),
+          where('chamado.uidRequerente', '==', userUid),
+          where('chamado.uidResponsavel', '==', userUid),
         ),
       );
 
       const collectionTask = await getDocs(q);
-      console.log(collection);
-      let tasks = [];
+      let fetchedTasks = [];
       collectionTask.forEach(element => {
         const dadosUsuario = element.data();
-        tasks.push(dadosUsuario.chamado);
+        fetchedTasks.push(dadosUsuario.chamado);
       });
-      console.log('user no listUsers: ', tasks);
-      setTasks(tasks);
-      return tasks;
+      setTasksGeral(fetchedTasks);
+      return fetchedTasks;
     } catch (error) {
       console.log(error);
       return error;
     }
   };
 
-  return { fetchTasks };
+  const fetchTasksRequerente = async (userUid = userAuth?.uid) => {
+    try {
+      const tasksCollection = collection(db, 'tarefa');
+      const q = query(
+        tasksCollection,
+        where('chamado.uidRequerente', '==', userUid),
+      );
+
+      const collectionTask = await getDocs(q);
+      console.log(collection);
+      let fetchedTasks = [];
+      collectionTask.forEach(element => {
+        const dadosUsuario = element.data();
+        fetchedTasks.push(dadosUsuario.chamado);
+      });
+      console.log('user no listUsers: ', fetchedTasks);
+      return fetchedTasks;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+  const fetchTasksResponsavel = async (userUid = userAuth?.uid) => {
+    console.log(userUid);
+    try {
+      console.log('Iniciando fetchTasks');
+      const tasksCollection = collection(db, 'tarefa');
+      const q = query(
+        tasksCollection,
+        where('chamado.uidResponsavel', '==', userUid),
+      );
+
+      const collectionTask = await getDocs(q);
+      console.log(collection);
+      let fetchedTasks = [];
+      collectionTask.forEach(element => {
+        const dadosUsuario = element.data();
+        fetchedTasks.push(dadosUsuario.chamado);
+      });
+      console.log('user no listUsers: ', fetchedTasks);
+      // setTasksResponsavel(fetchedTasks);
+      return fetchedTasks;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
+  const concludeTask = async id => {
+    const tarefaCollection = collection(db, 'tarefa');
+
+    // Cria uma consulta para encontrar o documento onde "chamado.id" é igual ao valor fornecido
+    const q = query(tarefaCollection, where('chamado.id', '==', id));
+
+    try {
+      // Executa a consulta
+      const querySnapshot = await getDocs(q);
+
+      // Verifica se encontrou documentos correspondentes
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async docSnapshot => {
+          // Atualiza o campo "chamado.concluido" no documento encontrado
+          await updateDoc(docSnapshot.ref, {
+            'chamado.concluido': true,
+          });
+          console.log('Campo "chamado.concluido" atualizado com sucesso!');
+          fetchTasks();
+        });
+      } else {
+        console.log('Nenhum documento encontrado com o id especificado.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o campo "chamado.concluido":', error);
+    }
+  };
+
+  useEffect(() => {
+    if (tasksGeral === null) {
+      fetchTasks(userAuth.uid);
+    }
+  }, []);
+
+  return {
+    fetchTasks,
+    concludeTask,
+    fetchTasksRequerente,
+    fetchTasksResponsavel,
+  };
 };
 
 export default useTask;

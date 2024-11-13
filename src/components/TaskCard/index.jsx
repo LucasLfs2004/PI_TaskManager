@@ -1,53 +1,23 @@
-import { scale } from '../../functions/scale';
-import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { scale } from '../../functions/scale';
+import useTask from '../../hooks/useTask';
+import StatusIcon from '../StatusIcon';
 
-const checkIfLate = dateString => {
-  const inputDate = moment(dateString, 'DD/MM/YYYY');
-
-  const currentDate = moment();
-  console.log(inputDate.isAfter(currentDate, 'day'), currentDate, inputDate);
-  return !inputDate.isAfter(currentDate, 'day');
-};
 const TaskCard = ({ task }) => {
   const navigation = useNavigation();
-  const [delayed, setDelayed] = useState(checkIfLate(task.prazoData));
-  console.log(delayed, task.concluido);
+  const { concludeTask } = useTask();
 
-  console.log(task);
+  const handlePressConcludeTask = async () => {
+    await concludeTask(task.id);
+  };
 
   return (
     <View style={styles.card}>
       <View style={styles.infos}>
         <View style={styles.column}>
           <Text style={styles.title}>{task.titulo}</Text>
-          <View
-            style={[
-              styles.statusView,
-              {
-                backgroundColor: task.concluido
-                  ? '#51B853'
-                  : !delayed
-                  ? '#F8B135'
-                  : '#f00',
-              },
-            ]}
-          >
-            <Text
-              style={{
-                color: '#fff',
-                fontWeight: '600',
-              }}
-            >
-              {!task?.concluido
-                ? delayed
-                  ? 'Atrasada'
-                  : 'Em processo'
-                : 'Concluída'}
-            </Text>
-          </View>
+          <StatusIcon task={task} />
         </View>
         <Text style={styles.title}>{task.responsavel}</Text>
         <Text style={[styles.desc, { fontWeight: '600' }]}>
@@ -57,7 +27,10 @@ const TaskCard = ({ task }) => {
       </View>
       <View style={styles.btnArea}>
         {!task?.concluido && (
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={handlePressConcludeTask}
+          >
             <Text style={styles.textBtn}>Concluir Tarefa</Text>
           </TouchableOpacity>
         )}
@@ -87,7 +60,6 @@ const styles = StyleSheet.create({
   infos: {
     rowGap: scale(8),
     flexDirection: 'column',
-    // maxWidth: scale(300),
   },
   title: {
     fontSize: scale(16),
@@ -119,10 +91,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: scale(16),
     fontWeight: '500',
-  },
-  statusView: {
-    borderRadius: scale(12),
-    paddingHorizontal: scale(10),
-    paddingVertical: scale(4),
   },
 });

@@ -1,15 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './src/config/reactQuery';
 import Routes from './src/routes';
 
 export default function App() {
-  return <Routes />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Routes />
+    </QueryClientProvider>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

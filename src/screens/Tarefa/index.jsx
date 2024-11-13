@@ -1,15 +1,16 @@
-import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import Header from '../../components/Header';
-import { scale } from '../../functions/scale';
-import BotaoSubmit from '../../components/BotaoSubmit';
 import { useNavigation } from '@react-navigation/native';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import BotaoSubmit from '../../components/BotaoSubmit';
+import Header from '../../components/Header';
+import StatusIcon from '../../components/StatusIcon';
+import { scale } from '../../functions/scale';
 
 const TarefaScreen = ({ route }) => {
   const { task } = route.params;
@@ -31,11 +32,17 @@ const TarefaScreen = ({ route }) => {
             Responsável: {task.responsavel}
           </Text>
           <Text style={styles.desc}>Criado por: {task.requerente}</Text>
-          <Text
-            style={[styles.text, { textAlign: 'right', marginTop: scale(12) }]}
-          >
-            Tipo: {task.tipo}
-          </Text>
+          <View style={styles.statusView}>
+            <Text
+              style={[
+                styles.text,
+                { textAlign: 'right', marginTop: scale(12) },
+              ]}
+            >
+              Tipo: {task.tipo}
+            </Text>
+            <StatusIcon task={task} />
+          </View>
         </View>
         <View style={{ flexDirection: 'row', columnGap: scale(64) }}>
           <View>
@@ -131,5 +138,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: scale(16),
     fontWeight: '500',
+  },
+  statusView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: scale(12),
   },
 });
