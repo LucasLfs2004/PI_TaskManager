@@ -118,6 +118,34 @@ const useTask = () => {
     }
   };
 
+  const openTask = async id => {
+    const tarefaCollection = collection(db, 'tarefa');
+
+    // Cria uma consulta para encontrar o documento onde "chamado.id" é igual ao valor fornecido
+    const q = query(tarefaCollection, where('chamado.id', '==', id));
+
+    try {
+      // Executa a consulta
+      const querySnapshot = await getDocs(q);
+
+      // Verifica se encontrou documentos correspondentes
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async docSnapshot => {
+          // Atualiza o campo "chamado.concluido" no documento encontrado
+          await updateDoc(docSnapshot.ref, {
+            'chamado.concluido': false,
+          });
+          console.log('Campo "chamado.concluido" atualizado com sucesso!');
+          fetchTasks();
+        });
+      } else {
+        console.log('Nenhum documento encontrado com o id especificado.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o campo "chamado.concluido":', error);
+    }
+  };
+
   useEffect(() => {
     if (tasksGeral === null) {
       fetchTasks(userAuth.uid);
@@ -129,6 +157,7 @@ const useTask = () => {
     concludeTask,
     fetchTasksRequerente,
     fetchTasksResponsavel,
+    openTask,
   };
 };
 

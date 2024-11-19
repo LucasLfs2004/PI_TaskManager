@@ -1,5 +1,10 @@
-import { useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
+import { collection, getDocs, or, query, where } from 'firebase/firestore';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -11,31 +16,61 @@ import BotaoGerenciamento from '../../components/BotaoGerenciamento';
 import GerenciamentoChamadoModal from '../../components/GerenciamentoChamadoModal';
 import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
 import Header from '../../components/Header';
-import RelatorioDeTarefaModal from '../../components/RelatorioDeTarefaModal';
 import TaskCard from '../../components/TaskCard';
+import { db } from '../../config/firebase';
 import { scale } from '../../functions/scale';
 import useTask from '../../hooks/useTask';
 import { useUserStore } from '../../store/userStore';
-import { useTaskStore } from '../../store/useTask';
 
 const Home = props => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   useTask();
   const [modalCriaTarefaVisible, setModalCriaTarefaVisible] = useState(false);
   const [
     modalGerenciamentoUsuarioVisible,
     setModalGerenciamentoUsuarioVisible,
   ] = useState(false);
-  const [modalRelatorio, setModalRelatorio] = useState(false);
   const [textoTituloModal, setTextoTituloModal] = useState('');
+  const [tasks, setTasks] = useState();
+  const { userData, userAuth } = useUserStore();
 
-  const { userData } = useUserStore();
+  const fetchTasks = async (userUid = userAuth?.uid) => {
+    try {
+      const tasksCollection = collection(db, 'tarefa');
+      const q = query(
+        tasksCollection,
+        or(
+          where('chamado.uidRequerente', '==', userUid),
+          where('chamado.uidResponsavel', '==', userUid),
+        ),
+      );
 
-  const { tasksGeral: tasks } = useTaskStore();
+      const collectionTask = await getDocs(q);
+      let fetchedTasks = [];
+      collectionTask.forEach(element => {
+        const dadosUsuario = element.data();
+        fetchedTasks.push(dadosUsuario.chamado);
+      });
+      setTasks(fetchedTasks);
+      return fetchedTasks;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
 
   useEffect(() => {
-    console.log('Atualização de tasks na home: ', tasks);
-  }, [tasks]);
+    fetchTasks();
+  }, [isFocused]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        fetchTasks();
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -64,13 +99,6 @@ const Home = props => {
               abrir={() => {
                 navigation.navigate('Users');
                 setTextoTituloModal('Gerenciar Usuario');
-              }}
-            />
-            <BotaoGerenciamento
-              texto='Criar e visualizar relatórios'
-              abrir={() => {
-                setModalRelatorio(true);
-                setTextoTituloModal('Relatório de Tarefas');
               }}
             />
           </>
@@ -108,13 +136,6 @@ const Home = props => {
         setVisivel={setModalGerenciamentoUsuarioVisible}
         setTexto={setTextoTituloModal}
       />
-
-      <RelatorioDeTarefaModal
-        visivel={modalRelatorio}
-        titulo={textoTituloModal}
-        setVisivel={setModalRelatorio}
-        setTexto={setTextoTituloModal}
-      />
     </SafeAreaView>
   );
 };
@@ -124,6 +145,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5F8FA',
+    flex: 1,
     marginTop: 25,
   },
 });

@@ -16,7 +16,9 @@ const TaskCard = ({ task }) => {
     <View style={styles.card}>
       <View style={styles.infos}>
         <View style={styles.column}>
-          <Text style={styles.title}>{task.titulo}</Text>
+          <Text style={[styles.title, { width: scale(240) }]}>
+            {task.titulo}
+          </Text>
           <StatusIcon task={task} />
         </View>
         <Text style={styles.title}>{task.responsavel}</Text>

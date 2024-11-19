@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import {
@@ -19,6 +20,7 @@ const initialLayout = { width: Dimensions.get('window').width };
 const ListTasks = () => {
   const [tasks, setTasks] = useState({ requerente: null, responsavel: null });
 
+  const isFocused = useIsFocused();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'requerente', title: 'Tarefas Criadas' },
@@ -61,7 +63,7 @@ const ListTasks = () => {
     if (userAuth?.uid) {
       getTasks();
     }
-  }, [userAuth.uid]);
+  }, [userAuth.uid, isFocused]);
 
   const RequerenteRoute = () => (
     <ScrollView style={{ flex: 1, paddingBottom: scale(48) }}>

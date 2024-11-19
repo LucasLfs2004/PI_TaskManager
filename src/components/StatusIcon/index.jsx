@@ -10,13 +10,14 @@ const checkIfLate = dateString => {
 };
 
 const StatusIcon = ({ task }) => {
-  const [delayed, setDelayed] = useState(checkIfLate(task.prazoData));
+  const [delayed, setDelayed] = useState(checkIfLate(task?.prazoData));
   return (
     <View
       style={{
         borderRadius: scale(12),
         paddingHorizontal: scale(10),
         paddingVertical: scale(4),
+        height: scale(28),
         backgroundColor: task.concluido
           ? '#51B853'
           : !delayed
