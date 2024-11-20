@@ -1,4 +1,10 @@
-import { collection, getDocs, query } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import {
   SafeAreaView,
@@ -34,7 +40,25 @@ const ListUsers = () => {
 
   useEffect(() => {
     getUsuario();
-  }, []);
+  }, [deleteUser]);
+
+  async function deleteUser(userId) {
+    const tarefaCollection = collection(db, 'usuario');
+
+    const q = query(tarefaCollection, where('user.uid', '==', userId));
+    try {
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async docSnapshot => {
+          await deleteDoc(docSnapshot.ref);
+        });
+      } else {
+        console.log('Nenhum documento encontrado com o id especificado.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o campo "chamado.concluido":', error);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,10 +90,11 @@ const ListUsers = () => {
                     : 'Sem acessos de admin'}
                 </Text>
                 <View style={styles.btnArea}>
-                  <TouchableOpacity style={styles.btnCadastro}>
+                  {/* <TouchableOpacity style={styles.btnCadastro}>
                     <Text style={styles.textBtn}>Ver tarefas</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                   <TouchableOpacity
+                    onPress={() => deleteUser(item?.user?.uid)}
                     style={[
                       styles.btnCadastro,
                       { backgroundColor: '#ff0000dd' },
