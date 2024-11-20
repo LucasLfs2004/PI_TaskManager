@@ -1,6 +1,6 @@
-import { View, Text, TextInput } from 'react-native';
-import { useState } from 'react';
 import moment from 'moment';
+import { useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
 import { scale } from '../../functions/scale';
 
 const InputDate = ({
@@ -55,8 +55,6 @@ const InputDate = ({
 
   const handleDateChange = input => {
     const formattedDate = formatDate(input); // Formata a data conforme digitada
-
-    console.log(formattedDate);
     modelValue(formattedDate);
 
     const dateValid = isValidDate(formattedDate);

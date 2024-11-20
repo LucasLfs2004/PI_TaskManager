@@ -1,31 +1,29 @@
-import React, { useEffect } from 'react';
+import { Picker } from '@react-native-picker/picker';
+import { LinearGradient } from 'expo-linear-gradient';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
+  Image,
   Modal,
-  View,
+  Platform,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
-  ImageBackgroundBase,
-  Image,
-  ScrollView,
-  Platform,
+  View,
 } from 'react-native';
-import moment from 'moment';
-import { Picker } from '@react-native-picker/picker';
-import Header from '../Header';
-import { LinearGradient } from 'expo-linear-gradient';
-import { modalStyles } from '../CommonStyles/Modal';
-import BotaoSubmit from '../BotaoSubmit';
-import { scale } from '../../functions/scale';
-import AvisoDeErro from '../AvisoDeErro';
-import { useState } from 'react';
 import { db } from '../../config/firebase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
-import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import InputDate from '../inputDate';
-import { useUserStore } from '../../store/userStore';
 import { generateRandomId } from '../../functions/generateId';
+import { scale } from '../../functions/scale';
+import { useUserStore } from '../../store/userStore';
+import AvisoDeErro from '../AvisoDeErro';
+import BotaoSubmit from '../BotaoSubmit';
+import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
+import { modalStyles } from '../CommonStyles/Modal';
+import Header from '../Header';
+import InputDate from '../inputDate';
 
 export default function GerenciamentoChamadoModal(props) {
   const [nomeRequerente, setNomeRequerente] = useState();
@@ -45,16 +43,9 @@ export default function GerenciamentoChamadoModal(props) {
   const [usuarios, setUsuarios] = useState([]);
   const [uidResponsavel, setUidResponsavel] = useState('');
 
-  useEffect(() => {
-    console.log(`Data: ${prazoData}\nData é valida: ${dateInputValid}`);
-  }, [prazoData]);
-
   const { userAuth, userData } = useUserStore();
 
   useEffect(() => {
-    console.log('userAuth', userAuth);
-    console.log('userData', userData);
-
     setNomeRequerente(
       userAuth?.displayName ? userAuth.displayName : userData?.nome,
     );
@@ -70,7 +61,6 @@ export default function GerenciamentoChamadoModal(props) {
             usuariosData.push({ id: doc.id, ...doc.data().user });
           });
           setUsuarios(usuariosData);
-          console.log(usuariosData);
         })
         .catch(erro => {
           console.error('Erro ao recuperar usuários: ', erro);
@@ -101,12 +91,10 @@ export default function GerenciamentoChamadoModal(props) {
       uidResponsavel,
     };
 
-    console.log(chamado);
     if (
       Object.values(chamado).every(value => value !== null) &&
       dateInputValid
     ) {
-      console.log(chamado);
       await addDoc(collection(db, 'tarefa'), { chamado }).catch(erro =>
         console.log(erro),
       );
@@ -133,10 +121,6 @@ export default function GerenciamentoChamadoModal(props) {
     props.setTexto('');
     setAvisoErroVisivel(false);
   }
-
-  useEffect(() => {
-    console.log(reclamanteChamado);
-  }, [reclamanteChamado]);
 
   return (
     <Modal
@@ -195,10 +179,7 @@ export default function GerenciamentoChamadoModal(props) {
             <InputDate
               placeholder='Prazo do chamado'
               value={prazoData}
-              modelValue={value => {
-                setPrazoData(value);
-                console.log('data value: ', value);
-              }}
+              modelValue={value => setPrazoData(value)}
               texto='dd/mm/aaaa'
               style={{
                 view: [styles.campoMetade, { marginRight: 5 }],

@@ -71,14 +71,7 @@ const TarefaScreen = ({ route }) => {
 
     // Cria uma consulta para encontrar o documento onde "chamado.id" é igual ao valor fornecido
     const q = query(tarefaCollection, where('chamado.id', '==', task.id));
-    const comentarioData = {
-      id: generateRandomId(), // ID único do comentário
-      autor: userData?.nome,
-      autorUID: userAuth?.uid,
-      texto: comentario,
-      dataComentario: moment().format('DD/MM/YYYY hh:mm'),
-    };
-    console.log('objeto com dados para comentario: ', comentarioData);
+
     try {
       // Executa a consulta
       const querySnapshot = await getDocs(q);
@@ -115,7 +108,6 @@ const TarefaScreen = ({ route }) => {
       if (!querySnapshot.empty) {
         querySnapshot.forEach(async docSnapshot => {
           const comentario = docSnapshot.data().chamado;
-          console.log('Comentario dentro do for each: ', comentario);
 
           const updatedComentarios = comentario.comentarios.filter(
             comentario => comentario.id !== comentarioId,

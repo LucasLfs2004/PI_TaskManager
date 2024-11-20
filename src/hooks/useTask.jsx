@@ -18,7 +18,6 @@ const useTask = () => {
 
   const fetchTasks = async (userUid = userAuth?.uid) => {
     try {
-      console.log('Iniciando fetchTasks');
       const tasksCollection = collection(db, 'tarefa');
       const q = query(
         tasksCollection,
@@ -51,13 +50,11 @@ const useTask = () => {
       );
 
       const collectionTask = await getDocs(q);
-      console.log(collection);
       let fetchedTasks = [];
       collectionTask.forEach(element => {
         const dadosUsuario = element.data();
         fetchedTasks.push(dadosUsuario.chamado);
       });
-      console.log('user no listUsers: ', fetchedTasks);
       return fetchedTasks;
     } catch (error) {
       console.log(error);
@@ -65,7 +62,6 @@ const useTask = () => {
     }
   };
   const fetchTasksResponsavel = async (userUid = userAuth?.uid) => {
-    console.log(userUid);
     try {
       console.log('Iniciando fetchTasks');
       const tasksCollection = collection(db, 'tarefa');
@@ -81,8 +77,6 @@ const useTask = () => {
         const dadosUsuario = element.data();
         fetchedTasks.push(dadosUsuario.chamado);
       });
-      console.log('user no listUsers: ', fetchedTasks);
-      // setTasksResponsavel(fetchedTasks);
       return fetchedTasks;
     } catch (error) {
       console.log(error);

@@ -1,9 +1,7 @@
-import { SafeAreaView, Image, Text, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase';
+import { Image, SafeAreaView, StyleSheet, Text } from 'react-native';
 import { scale } from '../../functions/scale';
 import useAuth from '../../hooks/useAuth';
 
@@ -17,7 +15,6 @@ const LoadingScreen = () => {
       const loginInfos = JSON.parse(loginData);
 
       const user = await autenticarUsuario(loginInfos.email, loginInfos.senha);
-      console.log('Email do usuario: ', user.email);
 
       if (user.email) {
         navigation.navigate('Home');

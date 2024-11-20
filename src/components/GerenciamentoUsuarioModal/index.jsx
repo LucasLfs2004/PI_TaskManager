@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
-  Modal,
-  View,
-  Text,
-  TextInput,
   Image,
+  Modal,
   Platform,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 
 import { LinearGradient } from 'expo-linear-gradient';
-import Header from '../Header';
-import { modalStyles } from '../CommonStyles/Modal';
-import BotaoSubmit from '../BotaoSubmit';
-import AvisoDeErro from '../AvisoDeErro';
-import { auth, db } from '../../config/firebase';
-import { collection, addDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { addDoc, collection } from 'firebase/firestore';
+import { auth, db } from '../../config/firebase';
+import { scale } from '../../functions/scale';
+import AvisoDeErro from '../AvisoDeErro';
+import BotaoSubmit from '../BotaoSubmit';
 import { EntradaTexto } from '../BotaoSubmit/EntradaTexto';
-import { scale, width } from '../../functions/scale';
+import { modalStyles } from '../CommonStyles/Modal';
+import Header from '../Header';
 
 export default function GerenciamentoUsuarioModal(props) {
   const [nome, setNome] = useState(null);
@@ -38,7 +37,6 @@ export default function GerenciamentoUsuarioModal(props) {
   const criarUsuario = async (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password)
       .then(response => {
-        console.log(response);
         return response;
       })
       .catch(e => {
@@ -65,8 +63,6 @@ export default function GerenciamentoUsuarioModal(props) {
     }
     criarUsuario(usuario.email, usuario.senha)
       .then(response => {
-        console.log('externo');
-        console.log(response);
         atualizarPerfilUsuario(response.user);
         armazenarDadosUsuario(response.user);
       })
@@ -105,7 +101,6 @@ export default function GerenciamentoUsuarioModal(props) {
     };
     return addDoc(collection(db, 'usuario'), { user })
       .then(() => {
-        console.log('Adição de dados concluida');
         return;
       })
       .catch(erro => console.log(erro));
@@ -123,7 +118,6 @@ export default function GerenciamentoUsuarioModal(props) {
     }
   };
 
-  console.log(cpf?.length);
   return (
     <Modal
       visible={props.visivel}

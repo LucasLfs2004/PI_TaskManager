@@ -1,13 +1,17 @@
-import { SafeAreaView, ScrollView, View, Text, StyleSheet } from 'react-native';
-import { falseList } from '../../../assets/falseDb';
-import TaskCard from '../../components/TaskCard';
-import Header from '../../components/Header';
-import { scale } from '../../functions/scale';
-import { collection, getDoc, getDocs, query } from 'firebase/firestore';
-import { db } from '../../config/firebase';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import GerenciamentoUsuarioModal from '../../components/GerenciamentoUsuarioModal';
+import Header from '../../components/Header';
+import { db } from '../../config/firebase';
+import { scale } from '../../functions/scale';
 
 const ListUsers = () => {
   const [usuario, setUsuario] = useState();
@@ -24,16 +28,11 @@ const ListUsers = () => {
     collection.forEach(element => {
       const dadosUsuario = element.data();
       user.push(dadosUsuario);
-      //   console.log(element.id, ' => ', element.data());
     });
-    console.log('user no listUsers: ', user);
     setUsuario(user);
   };
 
-  console.log('usuario no listUsers: ', usuario);
-
   useEffect(() => {
-    console.log('useEffect');
     getUsuario();
   }, []);
 
@@ -53,7 +52,6 @@ const ListUsers = () => {
           <Text style={styles.noUsersText}>Nenhum usuário cadastrado.</Text>
         ) : (
           usuario?.map((item, key) => {
-            console.log('usuário de indice ', key, ': ', item);
             return (
               <View key={key} style={styles.userCard}>
                 <Text style={styles.name}>
