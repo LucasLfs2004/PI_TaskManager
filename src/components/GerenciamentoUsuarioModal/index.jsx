@@ -95,7 +95,7 @@ export default function GerenciamentoUsuarioModal(props) {
     const user = {
       nome,
       cpf,
-      isAdmin: false,
+      isAdmin: isAdmin,
       tipo: tipoUsuario,
       uid: usuario.uid,
     };

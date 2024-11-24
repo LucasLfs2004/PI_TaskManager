@@ -147,11 +147,17 @@ export default function GerenciamentoChamadoModal(props) {
           </Text>
           <Picker
             selectedValue={uidResponsavel}
+            selectionColor={'#000'}
             style={[styles.picker, styles.input]}
+            itemStyle={{ color: '#000' }}
             onValueChange={itemValue => {
               setUidResponsavel(itemValue);
               setReclamanteChamado(
-                usuarios.find(objeto => objeto.uid === itemValue).nome,
+                itemValue === undefined ||
+                  itemValue === null ||
+                  itemValue === 'null'
+                  ? null
+                  : usuarios.find(objeto => objeto.uid === itemValue).nome,
               );
             }}
           >
